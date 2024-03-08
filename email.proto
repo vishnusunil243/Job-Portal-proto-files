@@ -1,0 +1,14 @@
+syntax="proto3";
+
+package user;
+
+option go_package="./pb";
+
+import "google/protobuf/empty.proto";
+
+message SendOtpRequest{
+    string email=1;
+}
+service EmailService{
+    rpc SendOTP(SendOtpRequest)returns(google.protobuf.Empty);
+}
