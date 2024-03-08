@@ -9,6 +9,13 @@ import "google/protobuf/empty.proto";
 message SendOtpRequest{
     string email=1;
 }
+message VerifyOTPRequest{
+ string otp=1;
+}
+message VerifyOTPResponse{
+    bool verified=1;
+}
 service EmailService{
     rpc SendOTP(SendOtpRequest)returns(google.protobuf.Empty);
+    rpc VerifyOTP(VerifyOTPRequest)returns(VerifyOTPResponse);
 }
