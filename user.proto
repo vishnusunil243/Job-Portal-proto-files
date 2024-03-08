@@ -1,0 +1,21 @@
+syntax="proto3";
+
+package user;
+
+option go_package="./pb";
+
+message UserSignupRequest{
+    string email=1;
+    string name=2;
+    string password=3;
+    string phone=4;
+}
+message UserSignupResponse{
+    string id=1;
+    string name=2;
+    string email=3;
+    string phone=4;
+}
+service UserService{
+    rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
+}
