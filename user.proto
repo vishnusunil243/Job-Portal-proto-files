@@ -24,4 +24,5 @@ message LoginRequest{
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
+    rpc AdminLogin(LoginRequest)returns(UserSignupResponse);
 }
