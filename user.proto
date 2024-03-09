@@ -9,6 +9,7 @@ message UserSignupRequest{
     string name=2;
     string password=3;
     string phone=4;
+    string otp=5;
 }
 message UserSignupResponse{
     string id=1;
