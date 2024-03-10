@@ -5,64 +5,72 @@ package user;
 option go_package="./pb";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
+message CompanySignupRequest {
+    string email = 1;
+    string name = 2;
+    string phone = 3;
+    string password = 4;
+    string otp = 5;
+}
 
-message CompanySignupRequest{
-    string email=1;
-    string name=2;
-    string phone=3;
-    string password=4;
-    string otp=5;
+message CompanySignupResponse {
+    string Id = 1;
+    string email = 2;
+    string name = 3;
+    string phone = 4;
 }
-message CompanySignupResponse{
-    string Id=1;
-    string email=2;
-    string name=3;
-    string phone=4;
-}
-message CompanyLoginRequest{
-    string email=1;
-    string password=2;
-}
-message SalaryRange{
-    int64 min_salary=1;
-    int64 max_salary=2;
-}
-message AddJobRequest{
-    int32 vacancy=1;
-    string designation=2;
-    SalaryRange salaryrange=3;
-    string min_experience=4;
-    string valid_until=5;
-}
-message JobResponse{
-    string company=1;
-    string designation=2;
-    SalaryRange salaryrange=3;
-    int32 vacancy=4;
-    int32 hired=5;
-    string posted_on=6;
-    string valid_until=7;
-    string status=8;
-}
-message UpdateJobRequest{
-    int32 vacancy=1;
-    string designation=2;
-    SalaryRange salaryrange=3;
-    string min_experience=4;
-    string valid_until=5;
-    string status=6;
-}
-message GetJobById{
-    string Id=1;
-}
-service CompanyService{
-    rpc CompanySignup(CompanySignupRequest)returns(CompanySignupResponse);
-    rpc CompanyLogin(CompanyLoginRequest)returns(CompanySignupResponse);
 
-    rpc AddJobs(AddJobRequest)returns(JobResponse);
-    rpc UpdateJobs(UpdateJobRequest)returns(JobResponse);
-    rpc DeleteJobs(GetJobById)returns(google.protobuf.Empty);
-    rpc GetAllJobs(google.protobuf.Empty)returns(stream JobResponse){}
-    rpc GetJob(GetJobById)returns(JobResponse);
+message CompanyLoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message SalaryRange {
+    int64 min_salary = 1;
+    int64 max_salary = 2;
+}
+
+message AddJobRequest {
+    int32 vacancy = 1;
+    string designation = 2;
+    SalaryRange salaryrange = 3;
+    string min_experience = 4;
+    google.protobuf.Timestamp valid_until = 5;
+}
+
+message JobResponse {
+    string company = 1;
+    string designation = 2;
+    SalaryRange salaryrange = 3;
+    int32 vacancy = 4;
+    int32 hired = 5;
+    google.protobuf.Timestamp posted_on = 6;
+    google.protobuf.Timestamp valid_until = 7;
+    string status = 8;
+}
+
+message UpdateJobRequest {
+    int32 vacancy = 1;
+    string designation = 2;
+    SalaryRange salaryrange = 3;
+    string min_experience = 4;
+    google.protobuf.Timestamp valid_until = 5;
+    string status = 6;
+}
+
+message GetJobById {
+    string Id = 1;
+}
+
+service CompanyService {
+    rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
+    rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
+
+    rpc AddJobs(AddJobRequest) returns (JobResponse);
+    rpc UpdateJobs(UpdateJobRequest) returns (JobResponse);
+    rpc DeleteJobs(GetJobById) returns (google.protobuf.Empty);
+    rpc GetAllJobs(google.protobuf.Empty) returns (stream JobResponse) {}
+    rpc GetJob(GetJobById) returns (JobResponse);
 }
