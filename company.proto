@@ -21,7 +21,29 @@ message CompanyLoginRequest{
     string email=1;
     string password=2;
 }
+message SalaryRange{
+    int64 min_salary=1;
+    int64 max_salary=2;
+}
+message AddJobRequest{
+    int32 vacancy=1;
+    string designation=2;
+    SalaryRange salaryrange=3;
+    string min_experience=4;
+    string valid_until=5;
+}
+message JobResponse{
+    string company=1;
+    string designation=2;
+    SalaryRange salaryrange=3;
+    int32 vacancy=4;
+    int32 hired=5;
+    string posted_on=6;
+    string valid_until=7;
+}
 service CompanyService{
     rpc CompanySignup(CompanySignupRequest)returns(CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest)returns(CompanySignupResponse);
+
+    rpc AddJobs(AddJobRequest)returns(JobResponse);
 }

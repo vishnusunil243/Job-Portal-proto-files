@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type CompanyServiceClient interface {
 	CompanySignup(ctx context.Context, in *CompanySignupRequest, opts ...grpc.CallOption) (*CompanySignupResponse, error)
 	CompanyLogin(ctx context.Context, in *CompanyLoginRequest, opts ...grpc.CallOption) (*CompanySignupResponse, error)
+	AddJobs(ctx context.Context, in *AddJobRequest, opts ...grpc.CallOption) (*JobResponse, error)
 }
 
 type companyServiceClient struct {
@@ -52,12 +53,22 @@ func (c *companyServiceClient) CompanyLogin(ctx context.Context, in *CompanyLogi
 	return out, nil
 }
 
+func (c *companyServiceClient) AddJobs(ctx context.Context, in *AddJobRequest, opts ...grpc.CallOption) (*JobResponse, error) {
+	out := new(JobResponse)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/AddJobs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
 type CompanyServiceServer interface {
 	CompanySignup(context.Context, *CompanySignupRequest) (*CompanySignupResponse, error)
 	CompanyLogin(context.Context, *CompanyLoginRequest) (*CompanySignupResponse, error)
+	AddJobs(context.Context, *AddJobRequest) (*JobResponse, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedCompanyServiceServer) CompanySignup(context.Context, *Company
 }
 func (UnimplementedCompanyServiceServer) CompanyLogin(context.Context, *CompanyLoginRequest) (*CompanySignupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompanyLogin not implemented")
+}
+func (UnimplementedCompanyServiceServer) AddJobs(context.Context, *AddJobRequest) (*JobResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddJobs not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -120,6 +134,24 @@ func _CompanyService_CompanyLogin_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_AddJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).AddJobs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/AddJobs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).AddJobs(ctx, req.(*AddJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CompanyLogin",
 			Handler:    _CompanyService_CompanyLogin_Handler,
+		},
+		{
+			MethodName: "AddJobs",
+			Handler:    _CompanyService_AddJobs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
