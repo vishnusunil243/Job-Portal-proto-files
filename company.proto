@@ -4,6 +4,9 @@ package user;
 
 option go_package="./pb";
 
+import "google/protobuf/empty.proto";
+
+
 message CompanySignupRequest{
     string email=1;
     string name=2;
@@ -40,10 +43,26 @@ message JobResponse{
     int32 hired=5;
     string posted_on=6;
     string valid_until=7;
+    string status=8;
+}
+message UpdateJobRequest{
+    int32 vacancy=1;
+    string designation=2;
+    SalaryRange salaryrange=3;
+    string min_experience=4;
+    string valid_until=5;
+    string status=6;
+}
+message GetJobById{
+    string Id=1;
 }
 service CompanyService{
     rpc CompanySignup(CompanySignupRequest)returns(CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest)returns(CompanySignupResponse);
 
     rpc AddJobs(AddJobRequest)returns(JobResponse);
+    rpc UpdateJobs(UpdateJobRequest)returns(JobResponse);
+    rpc DeleteJobs(GetJobById)returns(google.protobuf.Empty);
+    rpc GetAllJobs(google.protobuf.Empty)returns(stream JobResponse){}
+    rpc GetJob(GetJobById)returns(JobResponse);
 }
