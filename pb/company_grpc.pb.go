@@ -27,7 +27,7 @@ type CompanyServiceClient interface {
 	CompanyLogin(ctx context.Context, in *CompanyLoginRequest, opts ...grpc.CallOption) (*CompanySignupResponse, error)
 	AddJobs(ctx context.Context, in *AddJobRequest, opts ...grpc.CallOption) (*JobResponse, error)
 	UpdateJobs(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteJobs(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteJob(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllJobs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (CompanyService_GetAllJobsClient, error)
 	GetJob(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*JobResponse, error)
 	GetAllJobsForCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllJobsForCompanyClient, error)
@@ -77,9 +77,9 @@ func (c *companyServiceClient) UpdateJobs(ctx context.Context, in *UpdateJobRequ
 	return out, nil
 }
 
-func (c *companyServiceClient) DeleteJobs(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *companyServiceClient) DeleteJob(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/user.CompanyService/DeleteJobs", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/DeleteJob", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ type CompanyServiceServer interface {
 	CompanyLogin(context.Context, *CompanyLoginRequest) (*CompanySignupResponse, error)
 	AddJobs(context.Context, *AddJobRequest) (*JobResponse, error)
 	UpdateJobs(context.Context, *UpdateJobRequest) (*emptypb.Empty, error)
-	DeleteJobs(context.Context, *GetJobById) (*emptypb.Empty, error)
+	DeleteJob(context.Context, *GetJobById) (*emptypb.Empty, error)
 	GetAllJobs(*emptypb.Empty, CompanyService_GetAllJobsServer) error
 	GetJob(context.Context, *GetJobById) (*JobResponse, error)
 	GetAllJobsForCompany(*GetJobByCompanyId, CompanyService_GetAllJobsForCompanyServer) error
@@ -190,8 +190,8 @@ func (UnimplementedCompanyServiceServer) AddJobs(context.Context, *AddJobRequest
 func (UnimplementedCompanyServiceServer) UpdateJobs(context.Context, *UpdateJobRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateJobs not implemented")
 }
-func (UnimplementedCompanyServiceServer) DeleteJobs(context.Context, *GetJobById) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobs not implemented")
+func (UnimplementedCompanyServiceServer) DeleteJob(context.Context, *GetJobById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteJob not implemented")
 }
 func (UnimplementedCompanyServiceServer) GetAllJobs(*emptypb.Empty, CompanyService_GetAllJobsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllJobs not implemented")
@@ -287,20 +287,20 @@ func _CompanyService_UpdateJobs_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CompanyService_DeleteJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CompanyService_DeleteJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetJobById)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CompanyServiceServer).DeleteJobs(ctx, in)
+		return srv.(CompanyServiceServer).DeleteJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.CompanyService/DeleteJobs",
+		FullMethod: "/user.CompanyService/DeleteJob",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CompanyServiceServer).DeleteJobs(ctx, req.(*GetJobById))
+		return srv.(CompanyServiceServer).DeleteJob(ctx, req.(*GetJobById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -389,8 +389,8 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CompanyService_UpdateJobs_Handler,
 		},
 		{
-			MethodName: "DeleteJobs",
-			Handler:    _CompanyService_DeleteJobs_Handler,
+			MethodName: "DeleteJob",
+			Handler:    _CompanyService_DeleteJob_Handler,
 		},
 		{
 			MethodName: "GetJob",
