@@ -26,7 +26,7 @@ type CompanyServiceClient interface {
 	CompanySignup(ctx context.Context, in *CompanySignupRequest, opts ...grpc.CallOption) (*CompanySignupResponse, error)
 	CompanyLogin(ctx context.Context, in *CompanyLoginRequest, opts ...grpc.CallOption) (*CompanySignupResponse, error)
 	AddJobs(ctx context.Context, in *AddJobRequest, opts ...grpc.CallOption) (*JobResponse, error)
-	UpdateJobs(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*JobResponse, error)
+	UpdateJobs(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteJobs(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllJobs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (CompanyService_GetAllJobsClient, error)
 	GetJob(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*JobResponse, error)
@@ -68,8 +68,8 @@ func (c *companyServiceClient) AddJobs(ctx context.Context, in *AddJobRequest, o
 	return out, nil
 }
 
-func (c *companyServiceClient) UpdateJobs(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*JobResponse, error) {
-	out := new(JobResponse)
+func (c *companyServiceClient) UpdateJobs(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.CompanyService/UpdateJobs", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ type CompanyServiceServer interface {
 	CompanySignup(context.Context, *CompanySignupRequest) (*CompanySignupResponse, error)
 	CompanyLogin(context.Context, *CompanyLoginRequest) (*CompanySignupResponse, error)
 	AddJobs(context.Context, *AddJobRequest) (*JobResponse, error)
-	UpdateJobs(context.Context, *UpdateJobRequest) (*JobResponse, error)
+	UpdateJobs(context.Context, *UpdateJobRequest) (*emptypb.Empty, error)
 	DeleteJobs(context.Context, *GetJobById) (*emptypb.Empty, error)
 	GetAllJobs(*emptypb.Empty, CompanyService_GetAllJobsServer) error
 	GetJob(context.Context, *GetJobById) (*JobResponse, error)
@@ -187,7 +187,7 @@ func (UnimplementedCompanyServiceServer) CompanyLogin(context.Context, *CompanyL
 func (UnimplementedCompanyServiceServer) AddJobs(context.Context, *AddJobRequest) (*JobResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddJobs not implemented")
 }
-func (UnimplementedCompanyServiceServer) UpdateJobs(context.Context, *UpdateJobRequest) (*JobResponse, error) {
+func (UnimplementedCompanyServiceServer) UpdateJobs(context.Context, *UpdateJobRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateJobs not implemented")
 }
 func (UnimplementedCompanyServiceServer) DeleteJobs(context.Context, *GetJobById) (*emptypb.Empty, error) {

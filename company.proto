@@ -80,7 +80,7 @@ service CompanyService {
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
 
     rpc AddJobs(AddJobRequest) returns (JobResponse);
-    rpc UpdateJobs(UpdateJobRequest) returns (JobResponse);
+    rpc UpdateJobs(UpdateJobRequest) returns (google.protobuf.Empty);
     rpc DeleteJobs(GetJobById) returns (google.protobuf.Empty);
     rpc GetAllJobs(google.protobuf.Empty) returns (stream JobResponse) {}
     rpc GetJob(GetJobById) returns (JobResponse);
