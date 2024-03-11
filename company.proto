@@ -46,9 +46,10 @@ message JobResponse {
     SalaryRange salaryrange = 3;
     int32 vacancy = 4;
     int32 hired = 5;
-    google.protobuf.Timestamp posted_on = 6;
-    google.protobuf.Timestamp valid_until = 7;
-    string status = 8;
+    int32 capacity=6;
+    google.protobuf.Timestamp posted_on = 7;
+    google.protobuf.Timestamp valid_until = 8;
+    string status = 9;
 }
 
 message UpdateJobRequest {
