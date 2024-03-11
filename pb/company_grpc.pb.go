@@ -30,6 +30,7 @@ type CompanyServiceClient interface {
 	DeleteJobs(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllJobs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (CompanyService_GetAllJobsClient, error)
 	GetJob(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*JobResponse, error)
+	GetAllJobsForCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllJobsForCompanyClient, error)
 }
 
 type companyServiceClient struct {
@@ -126,6 +127,38 @@ func (c *companyServiceClient) GetJob(ctx context.Context, in *GetJobById, opts 
 	return out, nil
 }
 
+func (c *companyServiceClient) GetAllJobsForCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllJobsForCompanyClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[1], "/user.CompanyService/GetAllJobsForCompany", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &companyServiceGetAllJobsForCompanyClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type CompanyService_GetAllJobsForCompanyClient interface {
+	Recv() (*JobResponse, error)
+	grpc.ClientStream
+}
+
+type companyServiceGetAllJobsForCompanyClient struct {
+	grpc.ClientStream
+}
+
+func (x *companyServiceGetAllJobsForCompanyClient) Recv() (*JobResponse, error) {
+	m := new(JobResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -137,6 +170,7 @@ type CompanyServiceServer interface {
 	DeleteJobs(context.Context, *GetJobById) (*emptypb.Empty, error)
 	GetAllJobs(*emptypb.Empty, CompanyService_GetAllJobsServer) error
 	GetJob(context.Context, *GetJobById) (*JobResponse, error)
+	GetAllJobsForCompany(*GetJobByCompanyId, CompanyService_GetAllJobsForCompanyServer) error
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -164,6 +198,9 @@ func (UnimplementedCompanyServiceServer) GetAllJobs(*emptypb.Empty, CompanyServi
 }
 func (UnimplementedCompanyServiceServer) GetJob(context.Context, *GetJobById) (*JobResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJob not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetAllJobsForCompany(*GetJobByCompanyId, CompanyService_GetAllJobsForCompanyServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllJobsForCompany not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -307,6 +344,27 @@ func _CompanyService_GetJob_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_GetAllJobsForCompany_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetJobByCompanyId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CompanyServiceServer).GetAllJobsForCompany(m, &companyServiceGetAllJobsForCompanyServer{stream})
+}
+
+type CompanyService_GetAllJobsForCompanyServer interface {
+	Send(*JobResponse) error
+	grpc.ServerStream
+}
+
+type companyServiceGetAllJobsForCompanyServer struct {
+	grpc.ServerStream
+}
+
+func (x *companyServiceGetAllJobsForCompanyServer) Send(m *JobResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -343,6 +401,11 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllJobs",
 			Handler:       _CompanyService_GetAllJobs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllJobsForCompany",
+			Handler:       _CompanyService_GetAllJobsForCompany_Handler,
 			ServerStreams: true,
 		},
 	},
