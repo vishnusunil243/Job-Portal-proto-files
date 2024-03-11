@@ -40,6 +40,7 @@ message AddJobRequest {
     SalaryRange salaryrange = 3;
     string min_experience = 4;
     google.protobuf.Timestamp valid_until = 5;
+    string companyId=6;
 }
 
 message JobResponse {
