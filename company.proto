@@ -53,6 +53,7 @@ message JobResponse {
     string posted_on = 7;
     string valid_until = 8;
     string status = 9;
+    string minexperience=10;
 }
 
 message UpdateJobRequest {
