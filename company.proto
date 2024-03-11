@@ -21,7 +21,7 @@ message CompanySignupResponse {
     string email = 2;
     string name = 3;
     string phone = 4;
-    string category=5;
+    int32 category=5;
 }
 
 message CompanyLoginRequest {
