@@ -54,7 +54,6 @@ message AddLinkRequest{
 }
 message DeleteLinkRequest{
     string id=1;
-    string userId=2;
 }
 message LinkResponse{
     string Id=1;
