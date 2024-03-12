@@ -38,6 +38,9 @@ type UserServiceClient interface {
 	AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error)
 	GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error)
+	AddLinkUser(ctx context.Context, in *AddLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteLinkUser(ctx context.Context, in *DeleteLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllLinksUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllLinksUserClient, error)
 }
 
 type userServiceClient struct {
@@ -252,6 +255,56 @@ func (x *userServiceGetAllSkillsUserClient) Recv() (*SkillResponse, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) AddLinkUser(ctx context.Context, in *AddLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddLinkUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteLinkUser(ctx context.Context, in *DeleteLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/DeleteLinkUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetAllLinksUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllLinksUserClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[3], "/user.UserService/GetAllLinksUser", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllLinksUserClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllLinksUserClient interface {
+	Recv() (*LinkResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllLinksUserClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllLinksUserClient) Recv() (*LinkResponse, error) {
+	m := new(LinkResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -271,6 +324,9 @@ type UserServiceServer interface {
 	AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error)
 	GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error
 	GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error
+	AddLinkUser(context.Context, *AddLinkRequest) (*emptypb.Empty, error)
+	DeleteLinkUser(context.Context, *DeleteLinkRequest) (*emptypb.Empty, error)
+	GetAllLinksUser(*GetUserById, UserService_GetAllLinksUserServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -322,6 +378,15 @@ func (UnimplementedUserServiceServer) GetAllSkills(*emptypb.Empty, UserService_G
 }
 func (UnimplementedUserServiceServer) GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllSkillsUser not implemented")
+}
+func (UnimplementedUserServiceServer) AddLinkUser(context.Context, *AddLinkRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddLinkUser not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteLinkUser(context.Context, *DeleteLinkRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteLinkUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllLinksUser(*GetUserById, UserService_GetAllLinksUserServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllLinksUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -615,6 +680,63 @@ func (x *userServiceGetAllSkillsUserServer) Send(m *SkillResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_AddLinkUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddLinkUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddLinkUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddLinkUser(ctx, req.(*AddLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteLinkUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteLinkUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/DeleteLinkUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteLinkUser(ctx, req.(*DeleteLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllLinksUser_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllLinksUser(m, &userServiceGetAllLinksUserServer{stream})
+}
+
+type UserService_GetAllLinksUserServer interface {
+	Send(*LinkResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllLinksUserServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllLinksUserServer) Send(m *LinkResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -670,6 +792,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "AdminUpdateSkill",
 			Handler:    _UserService_AdminUpdateSkill_Handler,
 		},
+		{
+			MethodName: "AddLinkUser",
+			Handler:    _UserService_AddLinkUser_Handler,
+		},
+		{
+			MethodName: "DeleteLinkUser",
+			Handler:    _UserService_DeleteLinkUser_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -685,6 +815,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllSkillsUser",
 			Handler:       _UserService_GetAllSkillsUser_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllLinksUser",
+			Handler:       _UserService_GetAllLinksUser_Handler,
 			ServerStreams: true,
 		},
 	},

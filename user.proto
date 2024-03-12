@@ -47,6 +47,20 @@ message UpdateCategoryRequest{
     int32 id=1;
     string category=2;
 }
+message AddLinkRequest{
+    string UserId=1;
+    string title=2;
+    string url=3;
+}
+message DeleteLinkRequest{
+    string id=1;
+}
+message LinkResponse{
+    string Id=1;
+    string title=2;
+    string url=3;
+    string userId=4;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -64,4 +78,7 @@ service UserService{
     rpc AdminUpdateSkill(SkillResponse)returns(google.protobuf.Empty);
     rpc GetAllSkills(google.protobuf.Empty)returns(stream SkillResponse);
     rpc GetAllSkillsUser(GetUserById)returns(stream SkillResponse);
+    rpc AddLinkUser(AddLinkRequest)returns(google.protobuf.Empty);
+    rpc DeleteLinkUser(DeleteLinkRequest)returns(google.protobuf.Empty);
+    rpc GetAllLinksUser(GetUserById)returns(stream LinkResponse);
 }
