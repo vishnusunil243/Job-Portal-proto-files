@@ -40,6 +40,10 @@ message SkillResponse{
     int32 Id=1;
     string skill=2; 
 }
+message UpdateCategoryRequest{
+    int32 id=1;
+    string category=2;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -47,6 +51,7 @@ service UserService{
     rpc CreateProfile(GetUserById)returns(google.protobuf.Empty);
 
     rpc AddCategory(AddCategoryRequest)returns(google.protobuf.Empty);
+    rpc UpdateCategory(UpdateCategoryRequest)returns(google.protobuf.Empty);
     rpc RemoveCategory(DeleteSkillRequest)returns(google.protobuf.Empty);
     rpc AddSkillAdmin(AddSkillRequest)returns(google.protobuf.Empty);
     rpc DeleteSkillAdmin(DeleteSkillRequest)returns(google.protobuf.Empty);

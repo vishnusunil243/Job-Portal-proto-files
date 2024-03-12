@@ -28,6 +28,7 @@ type UserServiceClient interface {
 	AdminLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	CreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RemoveCategory(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddSkillAdmin(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteSkillAdmin(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -84,6 +85,15 @@ func (c *userServiceClient) CreateProfile(ctx context.Context, in *GetUserById, 
 func (c *userServiceClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/AddCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UpdateCategory", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -208,6 +218,7 @@ type UserServiceServer interface {
 	AdminLogin(context.Context, *LoginRequest) (*UserSignupResponse, error)
 	CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
+	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	RemoveCategory(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
 	AddSkillAdmin(context.Context, *AddSkillRequest) (*emptypb.Empty, error)
 	DeleteSkillAdmin(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
@@ -236,6 +247,9 @@ func (UnimplementedUserServiceServer) CreateProfile(context.Context, *GetUserByI
 }
 func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategory not implemented")
 }
 func (UnimplementedUserServiceServer) RemoveCategory(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveCategory not implemented")
@@ -357,6 +371,24 @@ func _UserService_AddCategory_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).AddCategory(ctx, req.(*AddCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UpdateCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateCategory(ctx, req.(*UpdateCategoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -519,6 +551,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddCategory",
 			Handler:    _UserService_AddCategory_Handler,
+		},
+		{
+			MethodName: "UpdateCategory",
+			Handler:    _UserService_UpdateCategory_Handler,
 		},
 		{
 			MethodName: "RemoveCategory",
