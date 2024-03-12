@@ -27,6 +27,14 @@ type UserServiceClient interface {
 	UserLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	AdminLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	CreateProfile(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveCategory(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddSkillAdmin(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteSkillAdmin(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error)
+	GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error)
 }
 
 type userServiceClient struct {
@@ -73,6 +81,124 @@ func (c *userServiceClient) CreateProfile(ctx context.Context, in *GetUserById, 
 	return out, nil
 }
 
+func (c *userServiceClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemoveCategory(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/RemoveCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AddSkillAdmin(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddSkillAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteSkillAdmin(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/DeleteSkillAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AddSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddSkillUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/DeleteSkillUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[0], "/user.UserService/GetAllSkills", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllSkillsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllSkillsClient interface {
+	Recv() (*SkillResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllSkillsClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllSkillsClient) Recv() (*SkillResponse, error) {
+	m := new(SkillResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *userServiceClient) GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[1], "/user.UserService/GetAllSkillsUser", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllSkillsUserClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllSkillsUserClient interface {
+	Recv() (*SkillResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllSkillsUserClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllSkillsUserClient) Recv() (*SkillResponse, error) {
+	m := new(SkillResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -81,6 +207,14 @@ type UserServiceServer interface {
 	UserLogin(context.Context, *LoginRequest) (*UserSignupResponse, error)
 	AdminLogin(context.Context, *LoginRequest) (*UserSignupResponse, error)
 	CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error)
+	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
+	RemoveCategory(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
+	AddSkillAdmin(context.Context, *AddSkillRequest) (*emptypb.Empty, error)
+	DeleteSkillAdmin(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
+	AddSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
+	DeleteSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
+	GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error
+	GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -99,6 +233,30 @@ func (UnimplementedUserServiceServer) AdminLogin(context.Context, *LoginRequest)
 }
 func (UnimplementedUserServiceServer) CreateProfile(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProfile not implemented")
+}
+func (UnimplementedUserServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveCategory(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCategory not implemented")
+}
+func (UnimplementedUserServiceServer) AddSkillAdmin(context.Context, *AddSkillRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSkillAdmin not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteSkillAdmin(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSkillAdmin not implemented")
+}
+func (UnimplementedUserServiceServer) AddSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSkillUser not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSkillUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllSkills not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllSkillsUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -185,6 +343,156 @@ func _UserService_CreateProfile_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddCategory(ctx, req.(*AddCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemoveCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSkillRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/RemoveCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveCategory(ctx, req.(*DeleteSkillRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AddSkillAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddSkillRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddSkillAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddSkillAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddSkillAdmin(ctx, req.(*AddSkillRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteSkillAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSkillRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteSkillAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/DeleteSkillAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteSkillAdmin(ctx, req.(*DeleteSkillRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AddSkillUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSkillRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddSkillUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddSkillUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddSkillUser(ctx, req.(*DeleteSkillRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteSkillUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSkillRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteSkillUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/DeleteSkillUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteSkillUser(ctx, req.(*DeleteSkillRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllSkills_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllSkills(m, &userServiceGetAllSkillsServer{stream})
+}
+
+type UserService_GetAllSkillsServer interface {
+	Send(*SkillResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllSkillsServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllSkillsServer) Send(m *SkillResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _UserService_GetAllSkillsUser_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllSkillsUser(m, &userServiceGetAllSkillsUserServer{stream})
+}
+
+type UserService_GetAllSkillsUserServer interface {
+	Send(*SkillResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllSkillsUserServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllSkillsUserServer) Send(m *SkillResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -208,7 +516,42 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "CreateProfile",
 			Handler:    _UserService_CreateProfile_Handler,
 		},
+		{
+			MethodName: "AddCategory",
+			Handler:    _UserService_AddCategory_Handler,
+		},
+		{
+			MethodName: "RemoveCategory",
+			Handler:    _UserService_RemoveCategory_Handler,
+		},
+		{
+			MethodName: "AddSkillAdmin",
+			Handler:    _UserService_AddSkillAdmin_Handler,
+		},
+		{
+			MethodName: "DeleteSkillAdmin",
+			Handler:    _UserService_DeleteSkillAdmin_Handler,
+		},
+		{
+			MethodName: "AddSkillUser",
+			Handler:    _UserService_AddSkillUser_Handler,
+		},
+		{
+			MethodName: "DeleteSkillUser",
+			Handler:    _UserService_DeleteSkillUser_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAllSkills",
+			Handler:       _UserService_GetAllSkills_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllSkillsUser",
+			Handler:       _UserService_GetAllSkillsUser_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "user.proto",
 }

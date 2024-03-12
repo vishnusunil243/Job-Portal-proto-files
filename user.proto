@@ -26,9 +26,31 @@ message LoginRequest{
 message GetUserById{
     string Id =1;
 }
+message AddSkillRequest{
+    string skill =1;
+}
+message DeleteSkillRequest{
+    int32 skillId=1;
+}
+message AddCategoryRequest{
+    string category=1;
+}
+message SkillResponse{
+    int32 Id=1;
+    string skill=2; 
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
     rpc AdminLogin(LoginRequest)returns(UserSignupResponse);
     rpc CreateProfile(GetUserById)returns(google.protobuf.Empty);
+
+    rpc AddCategory(AddCategoryRequest)returns(google.protobuf.Empty);
+    rpc RemoveCategory(DeleteSkillRequest)returns(google.protobuf.Empty);
+    rpc AddSkillAdmin(AddSkillRequest)returns(google.protobuf.Empty);
+    rpc DeleteSkillAdmin(DeleteSkillRequest)returns(google.protobuf.Empty);
+    rpc AddSkillUser(DeleteSkillRequest)returns(google.protobuf.Empty);
+    rpc DeleteSkillUser(DeleteSkillRequest)returns(google.protobuf.Empty);
+    rpc GetAllSkills(google.protobuf.Empty)returns(stream SkillResponse);
+    rpc GetAllSkillsUser(GetUserById)returns(stream SkillResponse);
 }
