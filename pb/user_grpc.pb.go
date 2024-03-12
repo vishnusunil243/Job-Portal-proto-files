@@ -34,6 +34,7 @@ type UserServiceClient interface {
 	DeleteSkillAdmin(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error)
 	GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error)
 }
@@ -145,6 +146,15 @@ func (c *userServiceClient) DeleteSkillUser(ctx context.Context, in *DeleteSkill
 	return out, nil
 }
 
+func (c *userServiceClient) AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AdminUpdateSkill", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[0], "/user.UserService/GetAllSkills", opts...)
 	if err != nil {
@@ -224,6 +234,7 @@ type UserServiceServer interface {
 	DeleteSkillAdmin(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
 	AddSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
 	DeleteSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
+	AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error)
 	GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error
 	GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error
 	mustEmbedUnimplementedUserServiceServer()
@@ -265,6 +276,9 @@ func (UnimplementedUserServiceServer) AddSkillUser(context.Context, *DeleteSkill
 }
 func (UnimplementedUserServiceServer) DeleteSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteSkillUser not implemented")
+}
+func (UnimplementedUserServiceServer) AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdminUpdateSkill not implemented")
 }
 func (UnimplementedUserServiceServer) GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllSkills not implemented")
@@ -483,6 +497,24 @@ func _UserService_DeleteSkillUser_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AdminUpdateSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SkillResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AdminUpdateSkill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AdminUpdateSkill",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AdminUpdateSkill(ctx, req.(*SkillResponse))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_GetAllSkills_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(emptypb.Empty)
 	if err := stream.RecvMsg(m); err != nil {
@@ -575,6 +607,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteSkillUser",
 			Handler:    _UserService_DeleteSkillUser_Handler,
+		},
+		{
+			MethodName: "AdminUpdateSkill",
+			Handler:    _UserService_AdminUpdateSkill_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

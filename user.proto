@@ -57,6 +57,7 @@ service UserService{
     rpc DeleteSkillAdmin(DeleteSkillRequest)returns(google.protobuf.Empty);
     rpc AddSkillUser(DeleteSkillRequest)returns(google.protobuf.Empty);
     rpc DeleteSkillUser(DeleteSkillRequest)returns(google.protobuf.Empty);
+    rpc AdminUpdateSkill(SkillResponse)returns(google.protobuf.Empty);
     rpc GetAllSkills(google.protobuf.Empty)returns(stream SkillResponse);
     rpc GetAllSkillsUser(GetUserById)returns(stream SkillResponse);
 }
