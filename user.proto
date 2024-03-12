@@ -28,6 +28,7 @@ message GetUserById{
 }
 message AddSkillRequest{
     string skill =1;
+    int32 categoryId=2;
 }
 message DeleteSkillRequest{
     int32 skillId=1;
@@ -39,6 +40,8 @@ message AddCategoryRequest{
 message SkillResponse{
     int32 Id=1;
     string skill=2; 
+    int32 categoryId=3;
+    string category=4;
 }
 message UpdateCategoryRequest{
     int32 id=1;
