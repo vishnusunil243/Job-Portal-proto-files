@@ -30,6 +30,7 @@ type UserServiceClient interface {
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RemoveCategory(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error)
 	AddSkillAdmin(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteSkillAdmin(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -110,6 +111,38 @@ func (c *userServiceClient) RemoveCategory(ctx context.Context, in *DeleteSkillR
 	return out, nil
 }
 
+func (c *userServiceClient) GetAllCategory(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllCategoryClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[0], "/user.UserService/GetAllCategory", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllCategoryClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllCategoryClient interface {
+	Recv() (*UpdateCategoryRequest, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllCategoryClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllCategoryClient) Recv() (*UpdateCategoryRequest, error) {
+	m := new(UpdateCategoryRequest)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *userServiceClient) AddSkillAdmin(ctx context.Context, in *AddSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/AddSkillAdmin", in, out, opts...)
@@ -156,7 +189,7 @@ func (c *userServiceClient) AdminUpdateSkill(ctx context.Context, in *SkillRespo
 }
 
 func (c *userServiceClient) GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[0], "/user.UserService/GetAllSkills", opts...)
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[1], "/user.UserService/GetAllSkills", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +221,7 @@ func (x *userServiceGetAllSkillsClient) Recv() (*SkillResponse, error) {
 }
 
 func (c *userServiceClient) GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error) {
-	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[1], "/user.UserService/GetAllSkillsUser", opts...)
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[2], "/user.UserService/GetAllSkillsUser", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -230,6 +263,7 @@ type UserServiceServer interface {
 	AddCategory(context.Context, *AddCategoryRequest) (*emptypb.Empty, error)
 	UpdateCategory(context.Context, *UpdateCategoryRequest) (*emptypb.Empty, error)
 	RemoveCategory(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
+	GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error
 	AddSkillAdmin(context.Context, *AddSkillRequest) (*emptypb.Empty, error)
 	DeleteSkillAdmin(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
 	AddSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
@@ -264,6 +298,9 @@ func (UnimplementedUserServiceServer) UpdateCategory(context.Context, *UpdateCat
 }
 func (UnimplementedUserServiceServer) RemoveCategory(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveCategory not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllCategory(*emptypb.Empty, UserService_GetAllCategoryServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllCategory not implemented")
 }
 func (UnimplementedUserServiceServer) AddSkillAdmin(context.Context, *AddSkillRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSkillAdmin not implemented")
@@ -423,6 +460,27 @@ func _UserService_RemoveCategory_Handler(srv interface{}, ctx context.Context, d
 		return srv.(UserServiceServer).RemoveCategory(ctx, req.(*DeleteSkillRequest))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllCategory_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllCategory(m, &userServiceGetAllCategoryServer{stream})
+}
+
+type UserService_GetAllCategoryServer interface {
+	Send(*UpdateCategoryRequest) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllCategoryServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllCategoryServer) Send(m *UpdateCategoryRequest) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _UserService_AddSkillAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -614,6 +672,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAllCategory",
+			Handler:       _UserService_GetAllCategory_Handler,
+			ServerStreams: true,
+		},
 		{
 			StreamName:    "GetAllSkills",
 			Handler:       _UserService_GetAllSkills_Handler,
