@@ -74,7 +74,10 @@ message GetJobById {
 message GetJobByCompanyId{
     string Id =1;
 }
-
+message AddJobSkillRequest{
+ int32 skillId=1;
+ string jobId=2;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -85,4 +88,7 @@ service CompanyService {
     rpc GetAllJobs(google.protobuf.Empty) returns (stream JobResponse) {}
     rpc GetJob(GetJobById) returns (JobResponse);
     rpc GetAllJobsForCompany(GetJobByCompanyId)returns(stream JobResponse){}
+    rpc CompanyAddJobSkill(AddJobSkillRequest)returns(google.protobuf.Empty);
+    rpc CompanyUpdateJobSkill(AddJobSkillRequest)returns(google.protobuf.Empty);
+    rpc GetAllJobSkill(GetJobById)returns(google.protobuf.Empty);
 }
