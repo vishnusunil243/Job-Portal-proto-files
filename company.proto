@@ -88,6 +88,19 @@ message JobSkillResponse{
 message JobSkillId{
     string id=1;
 }
+message CompanyLinkRequest{
+    string companyId=1;
+    string title=2;
+    string url=3;
+}
+message CompanyDeleteLinkRequest{
+    string id=1;
+}
+message CompanyLinkResponse{
+string id=1;
+string title=2;
+string url=3;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -102,4 +115,7 @@ service CompanyService {
     rpc CompanyUpdateJobSkill(AddJobSkillRequest)returns(google.protobuf.Empty);
     rpc GetAllJobSkill(GetJobById)returns(stream JobSkillResponse);
     rpc DeleteJobSkill(JobSkillId)returns(google.protobuf.Empty);
+    rpc CompanyAddLink(CompanyLinkRequest)returns(google.protobuf.Empty);
+    rpc CompanyDeleteLink(CompanyDeleteLinkRequest)returns(google.protobuf.Empty);
+    rpc CompanyGetAllLink(GetJobByCompanyId)returns(stream CompanyLinkResponse);
 }

@@ -35,6 +35,9 @@ type CompanyServiceClient interface {
 	CompanyUpdateJobSkill(ctx context.Context, in *AddJobSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllJobSkill(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (CompanyService_GetAllJobSkillClient, error)
 	DeleteJobSkill(ctx context.Context, in *JobSkillId, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompanyAddLink(ctx context.Context, in *CompanyLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompanyDeleteLink(ctx context.Context, in *CompanyDeleteLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompanyGetAllLink(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_CompanyGetAllLinkClient, error)
 }
 
 type companyServiceClient struct {
@@ -222,6 +225,56 @@ func (c *companyServiceClient) DeleteJobSkill(ctx context.Context, in *JobSkillI
 	return out, nil
 }
 
+func (c *companyServiceClient) CompanyAddLink(ctx context.Context, in *CompanyLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyAddLink", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) CompanyDeleteLink(ctx context.Context, in *CompanyDeleteLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyDeleteLink", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) CompanyGetAllLink(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_CompanyGetAllLinkClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[3], "/user.CompanyService/CompanyGetAllLink", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &companyServiceCompanyGetAllLinkClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type CompanyService_CompanyGetAllLinkClient interface {
+	Recv() (*CompanyLinkResponse, error)
+	grpc.ClientStream
+}
+
+type companyServiceCompanyGetAllLinkClient struct {
+	grpc.ClientStream
+}
+
+func (x *companyServiceCompanyGetAllLinkClient) Recv() (*CompanyLinkResponse, error) {
+	m := new(CompanyLinkResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -238,6 +291,9 @@ type CompanyServiceServer interface {
 	CompanyUpdateJobSkill(context.Context, *AddJobSkillRequest) (*emptypb.Empty, error)
 	GetAllJobSkill(*GetJobById, CompanyService_GetAllJobSkillServer) error
 	DeleteJobSkill(context.Context, *JobSkillId) (*emptypb.Empty, error)
+	CompanyAddLink(context.Context, *CompanyLinkRequest) (*emptypb.Empty, error)
+	CompanyDeleteLink(context.Context, *CompanyDeleteLinkRequest) (*emptypb.Empty, error)
+	CompanyGetAllLink(*GetJobByCompanyId, CompanyService_CompanyGetAllLinkServer) error
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -280,6 +336,15 @@ func (UnimplementedCompanyServiceServer) GetAllJobSkill(*GetJobById, CompanyServ
 }
 func (UnimplementedCompanyServiceServer) DeleteJobSkill(context.Context, *JobSkillId) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobSkill not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyAddLink(context.Context, *CompanyLinkRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyAddLink not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyDeleteLink(context.Context, *CompanyDeleteLinkRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyDeleteLink not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyGetAllLink(*GetJobByCompanyId, CompanyService_CompanyGetAllLinkServer) error {
+	return status.Errorf(codes.Unimplemented, "method CompanyGetAllLink not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -519,6 +584,63 @@ func _CompanyService_DeleteJobSkill_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_CompanyAddLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompanyLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyAddLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyAddLink",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyAddLink(ctx, req.(*CompanyLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_CompanyDeleteLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompanyDeleteLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyDeleteLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyDeleteLink",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyDeleteLink(ctx, req.(*CompanyDeleteLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_CompanyGetAllLink_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetJobByCompanyId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CompanyServiceServer).CompanyGetAllLink(m, &companyServiceCompanyGetAllLinkServer{stream})
+}
+
+type CompanyService_CompanyGetAllLinkServer interface {
+	Send(*CompanyLinkResponse) error
+	grpc.ServerStream
+}
+
+type companyServiceCompanyGetAllLinkServer struct {
+	grpc.ServerStream
+}
+
+func (x *companyServiceCompanyGetAllLinkServer) Send(m *CompanyLinkResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -562,6 +684,14 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "DeleteJobSkill",
 			Handler:    _CompanyService_DeleteJobSkill_Handler,
 		},
+		{
+			MethodName: "CompanyAddLink",
+			Handler:    _CompanyService_CompanyAddLink_Handler,
+		},
+		{
+			MethodName: "CompanyDeleteLink",
+			Handler:    _CompanyService_CompanyDeleteLink_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -577,6 +707,11 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllJobSkill",
 			Handler:       _CompanyService_GetAllJobSkill_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "CompanyGetAllLink",
+			Handler:       _CompanyService_CompanyGetAllLink_Handler,
 			ServerStreams: true,
 		},
 	},
