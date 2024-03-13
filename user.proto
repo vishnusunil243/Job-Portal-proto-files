@@ -67,6 +67,10 @@ message GetSkillByIdRequest{
 message GetCategoryByIdRequest{
     int32 id=1;
 }
+message JobApplyRequest{
+ string jobId=1;
+ string userId=2;    
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -90,4 +94,5 @@ service UserService{
     rpc GetAllLinksUser(GetUserById)returns(stream LinkResponse);
     rpc GetCategoryById(GetCategoryByIdRequest)returns(UpdateCategoryRequest);
     rpc GetUser(GetUserById)returns(UserSignupResponse);
+    rpc JobApply(JobApplyRequest)returns(google.protobuf.Empty);
 }
