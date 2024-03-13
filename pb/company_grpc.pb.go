@@ -33,7 +33,7 @@ type CompanyServiceClient interface {
 	GetAllJobsForCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllJobsForCompanyClient, error)
 	CompanyAddJobSkill(ctx context.Context, in *AddJobSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyUpdateJobSkill(ctx context.Context, in *AddJobSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetAllJobSkill(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllJobSkill(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (CompanyService_GetAllJobSkillClient, error)
 	DeleteJobSkill(ctx context.Context, in *JobSkillId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -181,13 +181,36 @@ func (c *companyServiceClient) CompanyUpdateJobSkill(ctx context.Context, in *Ad
 	return out, nil
 }
 
-func (c *companyServiceClient) GetAllJobSkill(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/user.CompanyService/GetAllJobSkill", in, out, opts...)
+func (c *companyServiceClient) GetAllJobSkill(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (CompanyService_GetAllJobSkillClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[2], "/user.CompanyService/GetAllJobSkill", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &companyServiceGetAllJobSkillClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type CompanyService_GetAllJobSkillClient interface {
+	Recv() (*JobSkillResponse, error)
+	grpc.ClientStream
+}
+
+type companyServiceGetAllJobSkillClient struct {
+	grpc.ClientStream
+}
+
+func (x *companyServiceGetAllJobSkillClient) Recv() (*JobSkillResponse, error) {
+	m := new(JobSkillResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *companyServiceClient) DeleteJobSkill(ctx context.Context, in *JobSkillId, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -213,7 +236,7 @@ type CompanyServiceServer interface {
 	GetAllJobsForCompany(*GetJobByCompanyId, CompanyService_GetAllJobsForCompanyServer) error
 	CompanyAddJobSkill(context.Context, *AddJobSkillRequest) (*emptypb.Empty, error)
 	CompanyUpdateJobSkill(context.Context, *AddJobSkillRequest) (*emptypb.Empty, error)
-	GetAllJobSkill(context.Context, *GetJobById) (*emptypb.Empty, error)
+	GetAllJobSkill(*GetJobById, CompanyService_GetAllJobSkillServer) error
 	DeleteJobSkill(context.Context, *JobSkillId) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
@@ -252,8 +275,8 @@ func (UnimplementedCompanyServiceServer) CompanyAddJobSkill(context.Context, *Ad
 func (UnimplementedCompanyServiceServer) CompanyUpdateJobSkill(context.Context, *AddJobSkillRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompanyUpdateJobSkill not implemented")
 }
-func (UnimplementedCompanyServiceServer) GetAllJobSkill(context.Context, *GetJobById) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllJobSkill not implemented")
+func (UnimplementedCompanyServiceServer) GetAllJobSkill(*GetJobById, CompanyService_GetAllJobSkillServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllJobSkill not implemented")
 }
 func (UnimplementedCompanyServiceServer) DeleteJobSkill(context.Context, *JobSkillId) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobSkill not implemented")
@@ -457,22 +480,25 @@ func _CompanyService_CompanyUpdateJobSkill_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CompanyService_GetAllJobSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetJobById)
-	if err := dec(in); err != nil {
-		return nil, err
+func _CompanyService_GetAllJobSkill_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetJobById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(CompanyServiceServer).GetAllJobSkill(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.CompanyService/GetAllJobSkill",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CompanyServiceServer).GetAllJobSkill(ctx, req.(*GetJobById))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(CompanyServiceServer).GetAllJobSkill(m, &companyServiceGetAllJobSkillServer{stream})
+}
+
+type CompanyService_GetAllJobSkillServer interface {
+	Send(*JobSkillResponse) error
+	grpc.ServerStream
+}
+
+type companyServiceGetAllJobSkillServer struct {
+	grpc.ServerStream
+}
+
+func (x *companyServiceGetAllJobSkillServer) Send(m *JobSkillResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _CompanyService_DeleteJobSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -533,10 +559,6 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CompanyService_CompanyUpdateJobSkill_Handler,
 		},
 		{
-			MethodName: "GetAllJobSkill",
-			Handler:    _CompanyService_GetAllJobSkill_Handler,
-		},
-		{
 			MethodName: "DeleteJobSkill",
 			Handler:    _CompanyService_DeleteJobSkill_Handler,
 		},
@@ -550,6 +572,11 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllJobsForCompany",
 			Handler:       _CompanyService_GetAllJobsForCompany_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllJobSkill",
+			Handler:       _CompanyService_GetAllJobSkill_Handler,
 			ServerStreams: true,
 		},
 	},
