@@ -64,6 +64,9 @@ message LinkResponse{
 message GetSkillByIdRequest{
     int32 id=1;
 }
+message GetCategoryByIdRequest{
+    int32 id=1;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -85,4 +88,5 @@ service UserService{
     rpc AddLinkUser(AddLinkRequest)returns(google.protobuf.Empty);
     rpc DeleteLinkUser(DeleteLinkRequest)returns(google.protobuf.Empty);
     rpc GetAllLinksUser(GetUserById)returns(stream LinkResponse);
+    rpc GetCategoryById(GetCategoryByIdRequest)returns(UpdateCategoryRequest);
 }

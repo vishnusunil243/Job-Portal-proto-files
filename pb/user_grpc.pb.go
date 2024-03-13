@@ -42,6 +42,7 @@ type UserServiceClient interface {
 	AddLinkUser(ctx context.Context, in *AddLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteLinkUser(ctx context.Context, in *DeleteLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllLinksUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllLinksUserClient, error)
+	GetCategoryById(ctx context.Context, in *GetCategoryByIdRequest, opts ...grpc.CallOption) (*UpdateCategoryRequest, error)
 }
 
 type userServiceClient struct {
@@ -315,6 +316,15 @@ func (x *userServiceGetAllLinksUserClient) Recv() (*LinkResponse, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) GetCategoryById(ctx context.Context, in *GetCategoryByIdRequest, opts ...grpc.CallOption) (*UpdateCategoryRequest, error) {
+	out := new(UpdateCategoryRequest)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetCategoryById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -338,6 +348,7 @@ type UserServiceServer interface {
 	AddLinkUser(context.Context, *AddLinkRequest) (*emptypb.Empty, error)
 	DeleteLinkUser(context.Context, *DeleteLinkRequest) (*emptypb.Empty, error)
 	GetAllLinksUser(*GetUserById, UserService_GetAllLinksUserServer) error
+	GetCategoryById(context.Context, *GetCategoryByIdRequest) (*UpdateCategoryRequest, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -401,6 +412,9 @@ func (UnimplementedUserServiceServer) DeleteLinkUser(context.Context, *DeleteLin
 }
 func (UnimplementedUserServiceServer) GetAllLinksUser(*GetUserById, UserService_GetAllLinksUserServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllLinksUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetCategoryById(context.Context, *GetCategoryByIdRequest) (*UpdateCategoryRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategoryById not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -769,6 +783,24 @@ func (x *userServiceGetAllLinksUserServer) Send(m *LinkResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_GetCategoryById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCategoryByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetCategoryById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetCategoryById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetCategoryById(ctx, req.(*GetCategoryByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -835,6 +867,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteLinkUser",
 			Handler:    _UserService_DeleteLinkUser_Handler,
+		},
+		{
+			MethodName: "GetCategoryById",
+			Handler:    _UserService_GetCategoryById_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
