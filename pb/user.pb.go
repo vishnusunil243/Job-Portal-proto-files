@@ -899,7 +899,7 @@ var file_user_proto_rawDesc = []byte{
 	0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52,
 	0x02, 0x69, 0x64, 0x22, 0x28, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f,
 	0x72, 0x79, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
-	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x32, 0xab, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x32, 0xe3, 0x0a,
 	0x0a, 0x0b, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3f, 0x0a,
 	0x0a, 0x55, 0x73, 0x65, 0x72, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x12, 0x17, 0x2e, 0x75, 0x73,
 	0x65, 0x72, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x52, 0x65, 0x71,
@@ -982,8 +982,12 @@ var file_user_proto_rawDesc = []byte{
 	0x12, 0x1c, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x61, 0x74, 0x65, 0x67,
 	0x6f, 0x72, 0x79, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b,
 	0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x61, 0x74, 0x65,
-	0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x42, 0x06, 0x5a, 0x04, 0x2e,
-	0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x36, 0x0a, 0x07, 0x47,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x12, 0x11, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x47, 0x65,
+	0x74, 0x55, 0x73, 0x65, 0x72, 0x42, 0x79, 0x49, 0x64, 0x1a, 0x18, 0x2e, 0x75, 0x73, 0x65, 0x72,
+	0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1037,28 +1041,30 @@ var file_user_proto_depIdxs = []int32{
 	10, // 17: user.UserService.DeleteLinkUser:input_type -> user.DeleteLinkRequest
 	3,  // 18: user.UserService.GetAllLinksUser:input_type -> user.GetUserById
 	13, // 19: user.UserService.GetCategoryById:input_type -> user.GetCategoryByIdRequest
-	1,  // 20: user.UserService.UserSignup:output_type -> user.UserSignupResponse
-	1,  // 21: user.UserService.UserLogin:output_type -> user.UserSignupResponse
-	1,  // 22: user.UserService.AdminLogin:output_type -> user.UserSignupResponse
-	14, // 23: user.UserService.CreateProfile:output_type -> google.protobuf.Empty
-	14, // 24: user.UserService.AddCategory:output_type -> google.protobuf.Empty
-	14, // 25: user.UserService.UpdateCategory:output_type -> google.protobuf.Empty
-	14, // 26: user.UserService.RemoveCategory:output_type -> google.protobuf.Empty
-	8,  // 27: user.UserService.GetAllCategory:output_type -> user.UpdateCategoryRequest
-	14, // 28: user.UserService.AddSkillAdmin:output_type -> google.protobuf.Empty
-	14, // 29: user.UserService.DeleteSkillAdmin:output_type -> google.protobuf.Empty
-	14, // 30: user.UserService.AddSkillUser:output_type -> google.protobuf.Empty
-	14, // 31: user.UserService.DeleteSkillUser:output_type -> google.protobuf.Empty
-	14, // 32: user.UserService.AdminUpdateSkill:output_type -> google.protobuf.Empty
-	7,  // 33: user.UserService.GetAllSkills:output_type -> user.SkillResponse
-	7,  // 34: user.UserService.GetSkillById:output_type -> user.SkillResponse
-	7,  // 35: user.UserService.GetAllSkillsUser:output_type -> user.SkillResponse
-	14, // 36: user.UserService.AddLinkUser:output_type -> google.protobuf.Empty
-	14, // 37: user.UserService.DeleteLinkUser:output_type -> google.protobuf.Empty
-	11, // 38: user.UserService.GetAllLinksUser:output_type -> user.LinkResponse
-	8,  // 39: user.UserService.GetCategoryById:output_type -> user.UpdateCategoryRequest
-	20, // [20:40] is the sub-list for method output_type
-	0,  // [0:20] is the sub-list for method input_type
+	3,  // 20: user.UserService.GetUser:input_type -> user.GetUserById
+	1,  // 21: user.UserService.UserSignup:output_type -> user.UserSignupResponse
+	1,  // 22: user.UserService.UserLogin:output_type -> user.UserSignupResponse
+	1,  // 23: user.UserService.AdminLogin:output_type -> user.UserSignupResponse
+	14, // 24: user.UserService.CreateProfile:output_type -> google.protobuf.Empty
+	14, // 25: user.UserService.AddCategory:output_type -> google.protobuf.Empty
+	14, // 26: user.UserService.UpdateCategory:output_type -> google.protobuf.Empty
+	14, // 27: user.UserService.RemoveCategory:output_type -> google.protobuf.Empty
+	8,  // 28: user.UserService.GetAllCategory:output_type -> user.UpdateCategoryRequest
+	14, // 29: user.UserService.AddSkillAdmin:output_type -> google.protobuf.Empty
+	14, // 30: user.UserService.DeleteSkillAdmin:output_type -> google.protobuf.Empty
+	14, // 31: user.UserService.AddSkillUser:output_type -> google.protobuf.Empty
+	14, // 32: user.UserService.DeleteSkillUser:output_type -> google.protobuf.Empty
+	14, // 33: user.UserService.AdminUpdateSkill:output_type -> google.protobuf.Empty
+	7,  // 34: user.UserService.GetAllSkills:output_type -> user.SkillResponse
+	7,  // 35: user.UserService.GetSkillById:output_type -> user.SkillResponse
+	7,  // 36: user.UserService.GetAllSkillsUser:output_type -> user.SkillResponse
+	14, // 37: user.UserService.AddLinkUser:output_type -> google.protobuf.Empty
+	14, // 38: user.UserService.DeleteLinkUser:output_type -> google.protobuf.Empty
+	11, // 39: user.UserService.GetAllLinksUser:output_type -> user.LinkResponse
+	8,  // 40: user.UserService.GetCategoryById:output_type -> user.UpdateCategoryRequest
+	1,  // 41: user.UserService.GetUser:output_type -> user.UserSignupResponse
+	21, // [21:42] is the sub-list for method output_type
+	0,  // [0:21] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

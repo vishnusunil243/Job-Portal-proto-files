@@ -89,4 +89,5 @@ service UserService{
     rpc DeleteLinkUser(DeleteLinkRequest)returns(google.protobuf.Empty);
     rpc GetAllLinksUser(GetUserById)returns(stream LinkResponse);
     rpc GetCategoryById(GetCategoryByIdRequest)returns(UpdateCategoryRequest);
+    rpc GetUser(GetUserById)returns(UserSignupResponse);
 }
