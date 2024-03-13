@@ -119,4 +119,5 @@ service CompanyService {
     rpc CompanyDeleteLink(CompanyDeleteLinkRequest)returns(google.protobuf.Empty);
     rpc CompanyGetAllLink(GetJobByCompanyId)returns(stream CompanyLinkResponse);
     rpc CompanyCreateProfile(GetJobByCompanyId)returns(google.protobuf.Empty);
+    rpc GetCompanyById(GetJobByCompanyId)returns(CompanySignupResponse);
 }
