@@ -78,6 +78,9 @@ message AddJobSkillRequest{
  int32 skillId=1;
  string jobId=2;
 }
+message JobSkillId{
+    string id=1;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -91,4 +94,5 @@ service CompanyService {
     rpc CompanyAddJobSkill(AddJobSkillRequest)returns(google.protobuf.Empty);
     rpc CompanyUpdateJobSkill(AddJobSkillRequest)returns(google.protobuf.Empty);
     rpc GetAllJobSkill(GetJobById)returns(google.protobuf.Empty);
+    rpc DeleteJobSkill(JobSkillId)returns(google.protobuf.Empty);
 }

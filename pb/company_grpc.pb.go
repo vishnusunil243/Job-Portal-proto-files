@@ -34,6 +34,7 @@ type CompanyServiceClient interface {
 	CompanyAddJobSkill(ctx context.Context, in *AddJobSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyUpdateJobSkill(ctx context.Context, in *AddJobSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllJobSkill(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteJobSkill(ctx context.Context, in *JobSkillId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type companyServiceClient struct {
@@ -189,6 +190,15 @@ func (c *companyServiceClient) GetAllJobSkill(ctx context.Context, in *GetJobByI
 	return out, nil
 }
 
+func (c *companyServiceClient) DeleteJobSkill(ctx context.Context, in *JobSkillId, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/DeleteJobSkill", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -204,6 +214,7 @@ type CompanyServiceServer interface {
 	CompanyAddJobSkill(context.Context, *AddJobSkillRequest) (*emptypb.Empty, error)
 	CompanyUpdateJobSkill(context.Context, *AddJobSkillRequest) (*emptypb.Empty, error)
 	GetAllJobSkill(context.Context, *GetJobById) (*emptypb.Empty, error)
+	DeleteJobSkill(context.Context, *JobSkillId) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -243,6 +254,9 @@ func (UnimplementedCompanyServiceServer) CompanyUpdateJobSkill(context.Context, 
 }
 func (UnimplementedCompanyServiceServer) GetAllJobSkill(context.Context, *GetJobById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllJobSkill not implemented")
+}
+func (UnimplementedCompanyServiceServer) DeleteJobSkill(context.Context, *JobSkillId) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobSkill not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -461,6 +475,24 @@ func _CompanyService_GetAllJobSkill_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_DeleteJobSkill_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JobSkillId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).DeleteJobSkill(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/DeleteJobSkill",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).DeleteJobSkill(ctx, req.(*JobSkillId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -503,6 +535,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllJobSkill",
 			Handler:    _CompanyService_GetAllJobSkill_Handler,
+		},
+		{
+			MethodName: "DeleteJobSkill",
+			Handler:    _CompanyService_DeleteJobSkill_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
