@@ -82,7 +82,8 @@ message JobSkillResponse{
     string id=1;
     int32 skillId=2;
     string skill=3;
-    string jobId=4;
+    string category=4;
+    string jobId=5;
 }
 message JobSkillId{
     string id=1;
