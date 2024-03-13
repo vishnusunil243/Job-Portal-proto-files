@@ -37,6 +37,7 @@ type UserServiceClient interface {
 	DeleteSkillUser(ctx context.Context, in *DeleteSkillRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AdminUpdateSkill(ctx context.Context, in *SkillResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllSkills(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (UserService_GetAllSkillsClient, error)
+	GetSkillById(ctx context.Context, in *GetSkillByIdRequest, opts ...grpc.CallOption) (*SkillResponse, error)
 	GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error)
 	AddLinkUser(ctx context.Context, in *AddLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteLinkUser(ctx context.Context, in *DeleteLinkRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -223,6 +224,15 @@ func (x *userServiceGetAllSkillsClient) Recv() (*SkillResponse, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) GetSkillById(ctx context.Context, in *GetSkillByIdRequest, opts ...grpc.CallOption) (*SkillResponse, error) {
+	out := new(SkillResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetSkillById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) GetAllSkillsUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllSkillsUserClient, error) {
 	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[2], "/user.UserService/GetAllSkillsUser", opts...)
 	if err != nil {
@@ -323,6 +333,7 @@ type UserServiceServer interface {
 	DeleteSkillUser(context.Context, *DeleteSkillRequest) (*emptypb.Empty, error)
 	AdminUpdateSkill(context.Context, *SkillResponse) (*emptypb.Empty, error)
 	GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error
+	GetSkillById(context.Context, *GetSkillByIdRequest) (*SkillResponse, error)
 	GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error
 	AddLinkUser(context.Context, *AddLinkRequest) (*emptypb.Empty, error)
 	DeleteLinkUser(context.Context, *DeleteLinkRequest) (*emptypb.Empty, error)
@@ -375,6 +386,9 @@ func (UnimplementedUserServiceServer) AdminUpdateSkill(context.Context, *SkillRe
 }
 func (UnimplementedUserServiceServer) GetAllSkills(*emptypb.Empty, UserService_GetAllSkillsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllSkills not implemented")
+}
+func (UnimplementedUserServiceServer) GetSkillById(context.Context, *GetSkillByIdRequest) (*SkillResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSkillById not implemented")
 }
 func (UnimplementedUserServiceServer) GetAllSkillsUser(*GetUserById, UserService_GetAllSkillsUserServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllSkillsUser not implemented")
@@ -659,6 +673,24 @@ func (x *userServiceGetAllSkillsServer) Send(m *SkillResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_GetSkillById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSkillByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetSkillById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetSkillById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetSkillById(ctx, req.(*GetSkillByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_GetAllSkillsUser_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(GetUserById)
 	if err := stream.RecvMsg(m); err != nil {
@@ -791,6 +823,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AdminUpdateSkill",
 			Handler:    _UserService_AdminUpdateSkill_Handler,
+		},
+		{
+			MethodName: "GetSkillById",
+			Handler:    _UserService_GetSkillById_Handler,
 		},
 		{
 			MethodName: "AddLinkUser",
