@@ -48,8 +48,8 @@ type UserServiceClient interface {
 	UserEditName(ctx context.Context, in *EditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UserEditPhone(ctx context.Context, in *EditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UserAddAddress(ctx context.Context, in *AddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	EditAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
+	UserEditAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UserGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
 }
 
 type userServiceClient struct {
@@ -377,18 +377,18 @@ func (c *userServiceClient) UserAddAddress(ctx context.Context, in *AddAddressRe
 	return out, nil
 }
 
-func (c *userServiceClient) EditAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userServiceClient) UserEditAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/user.UserService/EditAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserService/UserEditAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userServiceClient) GetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error) {
+func (c *userServiceClient) UserGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error) {
 	out := new(AddressResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/GetAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserService/UserGetAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -424,8 +424,8 @@ type UserServiceServer interface {
 	UserEditName(context.Context, *EditNameRequest) (*emptypb.Empty, error)
 	UserEditPhone(context.Context, *EditPhoneRequest) (*emptypb.Empty, error)
 	UserAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error)
-	EditAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
-	GetAddress(context.Context, *GetUserById) (*AddressResponse, error)
+	UserEditAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
+	UserGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -508,11 +508,11 @@ func (UnimplementedUserServiceServer) UserEditPhone(context.Context, *EditPhoneR
 func (UnimplementedUserServiceServer) UserAddAddress(context.Context, *AddAddressRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserAddAddress not implemented")
 }
-func (UnimplementedUserServiceServer) EditAddress(context.Context, *AddressResponse) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EditAddress not implemented")
+func (UnimplementedUserServiceServer) UserEditAddress(context.Context, *AddressResponse) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserEditAddress not implemented")
 }
-func (UnimplementedUserServiceServer) GetAddress(context.Context, *GetUserById) (*AddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAddress not implemented")
+func (UnimplementedUserServiceServer) UserGetAddress(context.Context, *GetUserById) (*AddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserGetAddress not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -989,38 +989,38 @@ func _UserService_UserAddAddress_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_EditAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UserEditAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddressResponse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).EditAddress(ctx, in)
+		return srv.(UserServiceServer).UserEditAddress(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/EditAddress",
+		FullMethod: "/user.UserService/UserEditAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).EditAddress(ctx, req.(*AddressResponse))
+		return srv.(UserServiceServer).UserEditAddress(ctx, req.(*AddressResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserService_UserGetAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserById)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetAddress(ctx, in)
+		return srv.(UserServiceServer).UserGetAddress(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/GetAddress",
+		FullMethod: "/user.UserService/UserGetAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetAddress(ctx, req.(*GetUserById))
+		return srv.(UserServiceServer).UserGetAddress(ctx, req.(*GetUserById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1117,12 +1117,12 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_UserAddAddress_Handler,
 		},
 		{
-			MethodName: "EditAddress",
-			Handler:    _UserService_EditAddress_Handler,
+			MethodName: "UserEditAddress",
+			Handler:    _UserService_UserEditAddress_Handler,
 		},
 		{
-			MethodName: "GetAddress",
-			Handler:    _UserService_GetAddress_Handler,
+			MethodName: "UserGetAddress",
+			Handler:    _UserService_UserGetAddress_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

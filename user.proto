@@ -121,6 +121,6 @@ service UserService{
     rpc UserEditName(EditNameRequest)returns(google.protobuf.Empty);
     rpc UserEditPhone(EditPhoneRequest)returns(google.protobuf.Empty);
     rpc UserAddAddress(AddAddressRequest)returns(google.protobuf.Empty);
-    rpc EditAddress(AddressResponse)returns(google.protobuf.Empty);
-    rpc GetAddress(GetUserById)returns(AddressResponse);
+    rpc UserEditAddress(AddressResponse)returns(google.protobuf.Empty);
+    rpc UserGetAddress(GetUserById)returns(AddressResponse);
 }
