@@ -97,9 +97,24 @@ message CompanyDeleteLinkRequest{
     string id=1;
 }
 message CompanyLinkResponse{
-string id=1;
-string title=2;
-string url=3;
+    string id=1;
+    string title=2;
+    string url=3;
+}
+message CompanyAddAddressRequest{
+    string country=1;
+    string state=2;
+    string district=3;
+    string city=4;
+    string userId=5;
+}
+message CompanyAddressResponse{
+    string Id=1;
+    string country=2;
+    string state=3;
+    string district=4;
+    string city=5;
+    string userId=6;
 }
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
@@ -120,4 +135,7 @@ service CompanyService {
     rpc CompanyGetAllLink(GetJobByCompanyId)returns(stream CompanyLinkResponse);
     rpc CompanyCreateProfile(GetJobByCompanyId)returns(google.protobuf.Empty);
     rpc GetCompanyById(GetJobByCompanyId)returns(CompanySignupResponse);
+    rpc CompanyAddAddress(CompanyAddAddressRequest)returns(google.protobuf.Empty);
+    rpc CompanyEditAddress(CompanyAddAddressRequest)returns(google.protobuf.Empty);
+    rpc CompanyGetAddress(GetJobByCompanyId)returns(CompanyAddressResponse);
 }

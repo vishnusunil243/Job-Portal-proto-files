@@ -40,6 +40,9 @@ type CompanyServiceClient interface {
 	CompanyGetAllLink(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_CompanyGetAllLinkClient, error)
 	CompanyCreateProfile(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetCompanyById(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanySignupResponse, error)
+	CompanyAddAddress(ctx context.Context, in *CompanyAddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompanyEditAddress(ctx context.Context, in *CompanyAddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompanyGetAddress(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyAddressResponse, error)
 }
 
 type companyServiceClient struct {
@@ -295,6 +298,33 @@ func (c *companyServiceClient) GetCompanyById(ctx context.Context, in *GetJobByC
 	return out, nil
 }
 
+func (c *companyServiceClient) CompanyAddAddress(ctx context.Context, in *CompanyAddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyAddAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) CompanyEditAddress(ctx context.Context, in *CompanyAddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyEditAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) CompanyGetAddress(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyAddressResponse, error) {
+	out := new(CompanyAddressResponse)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyGetAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -316,6 +346,9 @@ type CompanyServiceServer interface {
 	CompanyGetAllLink(*GetJobByCompanyId, CompanyService_CompanyGetAllLinkServer) error
 	CompanyCreateProfile(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
 	GetCompanyById(context.Context, *GetJobByCompanyId) (*CompanySignupResponse, error)
+	CompanyAddAddress(context.Context, *CompanyAddAddressRequest) (*emptypb.Empty, error)
+	CompanyEditAddress(context.Context, *CompanyAddAddressRequest) (*emptypb.Empty, error)
+	CompanyGetAddress(context.Context, *GetJobByCompanyId) (*CompanyAddressResponse, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -373,6 +406,15 @@ func (UnimplementedCompanyServiceServer) CompanyCreateProfile(context.Context, *
 }
 func (UnimplementedCompanyServiceServer) GetCompanyById(context.Context, *GetJobByCompanyId) (*CompanySignupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyById not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyAddAddress(context.Context, *CompanyAddAddressRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyAddAddress not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyEditAddress(context.Context, *CompanyAddAddressRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyEditAddress not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyGetAddress(context.Context, *GetJobByCompanyId) (*CompanyAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyGetAddress not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -705,6 +747,60 @@ func _CompanyService_GetCompanyById_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_CompanyAddAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompanyAddAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyAddAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyAddAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyAddAddress(ctx, req.(*CompanyAddAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_CompanyEditAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompanyAddAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyEditAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyEditAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyEditAddress(ctx, req.(*CompanyAddAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_CompanyGetAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobByCompanyId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyGetAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyGetAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyGetAddress(ctx, req.(*GetJobByCompanyId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -763,6 +859,18 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompanyById",
 			Handler:    _CompanyService_GetCompanyById_Handler,
+		},
+		{
+			MethodName: "CompanyAddAddress",
+			Handler:    _CompanyService_CompanyAddAddress_Handler,
+		},
+		{
+			MethodName: "CompanyEditAddress",
+			Handler:    _CompanyService_CompanyEditAddress_Handler,
+		},
+		{
+			MethodName: "CompanyGetAddress",
+			Handler:    _CompanyService_CompanyGetAddress_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
