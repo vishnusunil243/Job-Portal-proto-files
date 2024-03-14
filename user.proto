@@ -71,6 +71,12 @@ message JobApplyRequest{
  string jobId=1;
  string userId=2;    
 }
+message EditNameRequest{
+    string name=1;
+}
+message EditPhoneRequest{
+    string phone=1;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -95,4 +101,6 @@ service UserService{
     rpc GetCategoryById(GetCategoryByIdRequest)returns(UpdateCategoryRequest);
     rpc GetUser(GetUserById)returns(UserSignupResponse);
     rpc JobApply(JobApplyRequest)returns(google.protobuf.Empty);
+    rpc UserEditName(EditNameRequest)returns(google.protobuf.Empty);
+    rpc UserEditPhone(EditPhoneRequest)returns(google.protobuf.Empty);
 }

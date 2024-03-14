@@ -45,6 +45,8 @@ type UserServiceClient interface {
 	GetCategoryById(ctx context.Context, in *GetCategoryByIdRequest, opts ...grpc.CallOption) (*UpdateCategoryRequest, error)
 	GetUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	JobApply(ctx context.Context, in *JobApplyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UserEditName(ctx context.Context, in *EditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UserEditPhone(ctx context.Context, in *EditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -345,6 +347,24 @@ func (c *userServiceClient) JobApply(ctx context.Context, in *JobApplyRequest, o
 	return out, nil
 }
 
+func (c *userServiceClient) UserEditName(ctx context.Context, in *EditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UserEditName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UserEditPhone(ctx context.Context, in *EditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UserEditPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -371,6 +391,8 @@ type UserServiceServer interface {
 	GetCategoryById(context.Context, *GetCategoryByIdRequest) (*UpdateCategoryRequest, error)
 	GetUser(context.Context, *GetUserById) (*UserSignupResponse, error)
 	JobApply(context.Context, *JobApplyRequest) (*emptypb.Empty, error)
+	UserEditName(context.Context, *EditNameRequest) (*emptypb.Empty, error)
+	UserEditPhone(context.Context, *EditPhoneRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -443,6 +465,12 @@ func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserById) (*U
 }
 func (UnimplementedUserServiceServer) JobApply(context.Context, *JobApplyRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method JobApply not implemented")
+}
+func (UnimplementedUserServiceServer) UserEditName(context.Context, *EditNameRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserEditName not implemented")
+}
+func (UnimplementedUserServiceServer) UserEditPhone(context.Context, *EditPhoneRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserEditPhone not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -865,6 +893,42 @@ func _UserService_JobApply_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UserEditName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserEditName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UserEditName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserEditName(ctx, req.(*EditNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UserEditPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserEditPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UserEditPhone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserEditPhone(ctx, req.(*EditPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -943,6 +1007,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "JobApply",
 			Handler:    _UserService_JobApply_Handler,
+		},
+		{
+			MethodName: "UserEditName",
+			Handler:    _UserService_UserEditName_Handler,
+		},
+		{
+			MethodName: "UserEditPhone",
+			Handler:    _UserService_UserEditPhone_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
