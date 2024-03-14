@@ -79,6 +79,21 @@ message EditPhoneRequest{
     string phone=1;
     string userId=2;
 }
+message AddAddressRequest{
+    string country=1;
+    string state=2;
+    string district=3;
+    string city=4;
+    string userId=5;
+}
+message AddressResponse{
+    string Id=1;
+    string country=2;
+    string state=3;
+    string district=4;
+    string city=5;
+    string userId=6;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -105,4 +120,7 @@ service UserService{
     rpc JobApply(JobApplyRequest)returns(google.protobuf.Empty);
     rpc UserEditName(EditNameRequest)returns(google.protobuf.Empty);
     rpc UserEditPhone(EditPhoneRequest)returns(google.protobuf.Empty);
+    rpc UserAddAddress(AddAddressRequest)returns(google.protobuf.Empty);
+    rpc EditAddress(AddressResponse)returns(google.protobuf.Empty);
+    rpc GetAddress(GetUserById)returns(AddressResponse);
 }
