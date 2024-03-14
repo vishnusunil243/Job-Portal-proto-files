@@ -116,6 +116,14 @@ message CompanyAddressResponse{
     string city=5;
     string companyId=6;
 }
+message CompanyEditNameRequest{
+    string companyId=1;
+    string name=2;
+}
+message CompanyEditPhoneRequest{
+    string companyId=1;
+    string phone=2;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -138,4 +146,6 @@ service CompanyService {
     rpc CompanyAddAddress(CompanyAddAddressRequest)returns(google.protobuf.Empty);
     rpc CompanyEditAddress(CompanyAddAddressRequest)returns(google.protobuf.Empty);
     rpc CompanyGetAddress(GetJobByCompanyId)returns(CompanyAddressResponse);
+    rpc CompanyEditName(CompanyEditNameRequest)returns(google.protobuf.Empty);
+    rpc CompanyEditPhone(CompanyEditPhoneRequest)returns(google.protobuf.Empty);
 }

@@ -43,6 +43,8 @@ type CompanyServiceClient interface {
 	CompanyAddAddress(ctx context.Context, in *CompanyAddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyEditAddress(ctx context.Context, in *CompanyAddAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyGetAddress(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyAddressResponse, error)
+	CompanyEditName(ctx context.Context, in *CompanyEditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompanyEditPhone(ctx context.Context, in *CompanyEditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type companyServiceClient struct {
@@ -325,6 +327,24 @@ func (c *companyServiceClient) CompanyGetAddress(ctx context.Context, in *GetJob
 	return out, nil
 }
 
+func (c *companyServiceClient) CompanyEditName(ctx context.Context, in *CompanyEditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyEditName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) CompanyEditPhone(ctx context.Context, in *CompanyEditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CompanyEditPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -349,6 +369,8 @@ type CompanyServiceServer interface {
 	CompanyAddAddress(context.Context, *CompanyAddAddressRequest) (*emptypb.Empty, error)
 	CompanyEditAddress(context.Context, *CompanyAddAddressRequest) (*emptypb.Empty, error)
 	CompanyGetAddress(context.Context, *GetJobByCompanyId) (*CompanyAddressResponse, error)
+	CompanyEditName(context.Context, *CompanyEditNameRequest) (*emptypb.Empty, error)
+	CompanyEditPhone(context.Context, *CompanyEditPhoneRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -415,6 +437,12 @@ func (UnimplementedCompanyServiceServer) CompanyEditAddress(context.Context, *Co
 }
 func (UnimplementedCompanyServiceServer) CompanyGetAddress(context.Context, *GetJobByCompanyId) (*CompanyAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompanyGetAddress not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyEditName(context.Context, *CompanyEditNameRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyEditName not implemented")
+}
+func (UnimplementedCompanyServiceServer) CompanyEditPhone(context.Context, *CompanyEditPhoneRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompanyEditPhone not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -801,6 +829,42 @@ func _CompanyService_CompanyGetAddress_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_CompanyEditName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompanyEditNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyEditName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyEditName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyEditName(ctx, req.(*CompanyEditNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_CompanyEditPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompanyEditPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CompanyEditPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CompanyEditPhone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CompanyEditPhone(ctx, req.(*CompanyEditPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -871,6 +935,14 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CompanyGetAddress",
 			Handler:    _CompanyService_CompanyGetAddress_Handler,
+		},
+		{
+			MethodName: "CompanyEditName",
+			Handler:    _CompanyService_CompanyEditName_Handler,
+		},
+		{
+			MethodName: "CompanyEditPhone",
+			Handler:    _CompanyService_CompanyEditPhone_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
