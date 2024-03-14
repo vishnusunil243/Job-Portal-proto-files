@@ -106,7 +106,7 @@ message CompanyAddAddressRequest{
     string state=2;
     string district=3;
     string city=4;
-    string userId=5;
+    string companyId=5;
 }
 message CompanyAddressResponse{
     string Id=1;
@@ -114,7 +114,7 @@ message CompanyAddressResponse{
     string state=3;
     string district=4;
     string city=5;
-    string userId=6;
+    string companyId=6;
 }
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
