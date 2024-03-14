@@ -73,9 +73,11 @@ message JobApplyRequest{
 }
 message EditNameRequest{
     string name=1;
+    string userId=2;
 }
 message EditPhoneRequest{
     string phone=1;
+    string userId=2;
 }
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
