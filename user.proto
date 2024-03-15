@@ -94,6 +94,13 @@ message AddressResponse{
     string city=5;
     string userId=6;
 }
+message UserImageRequest{
+    string objectName=1;
+    string filePath=2;
+}
+message UserImageResponse{
+    string url=1;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -123,4 +130,5 @@ service UserService{
     rpc UserAddAddress(AddAddressRequest)returns(google.protobuf.Empty);
     rpc UserEditAddress(AddressResponse)returns(google.protobuf.Empty);
     rpc UserGetAddress(GetUserById)returns(AddressResponse);
+    rpc UserUploadProfileImage(UserImageRequest)returns(UserImageResponse);
 }
