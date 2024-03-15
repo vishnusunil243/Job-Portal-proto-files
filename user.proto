@@ -98,7 +98,7 @@ message UserImageRequest{
     string objectName=1;
     string filePath=2;
     bytes imageData=3;
-    string companyId=4;
+    string userId=4;
 }
 message UserImageResponse{
     string url=1;
