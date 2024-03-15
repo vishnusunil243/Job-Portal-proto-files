@@ -128,6 +128,7 @@ message CompanyImageRequest{
     string objectName=1;
     string filePath=2;
     bytes imageData=3;
+    string companyId=4;
 }
 message CompanyImageResponse{
     string url=1;
