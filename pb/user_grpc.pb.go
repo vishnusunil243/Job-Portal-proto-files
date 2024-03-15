@@ -51,6 +51,7 @@ type UserServiceClient interface {
 	UserEditAddress(ctx context.Context, in *AddressResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UserGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
 	UserUploadProfileImage(ctx context.Context, in *UserImageRequest, opts ...grpc.CallOption) (*UserImageResponse, error)
+	UserGetProfilePic(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*UserImageResponse, error)
 }
 
 type userServiceClient struct {
@@ -405,6 +406,15 @@ func (c *userServiceClient) UserUploadProfileImage(ctx context.Context, in *User
 	return out, nil
 }
 
+func (c *userServiceClient) UserGetProfilePic(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*UserImageResponse, error) {
+	out := new(UserImageResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/UserGetProfilePic", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -437,6 +447,7 @@ type UserServiceServer interface {
 	UserEditAddress(context.Context, *AddressResponse) (*emptypb.Empty, error)
 	UserGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
 	UserUploadProfileImage(context.Context, *UserImageRequest) (*UserImageResponse, error)
+	UserGetProfilePic(context.Context, *GetUserById) (*UserImageResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -527,6 +538,9 @@ func (UnimplementedUserServiceServer) UserGetAddress(context.Context, *GetUserBy
 }
 func (UnimplementedUserServiceServer) UserUploadProfileImage(context.Context, *UserImageRequest) (*UserImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserUploadProfileImage not implemented")
+}
+func (UnimplementedUserServiceServer) UserGetProfilePic(context.Context, *GetUserById) (*UserImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserGetProfilePic not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1057,6 +1071,24 @@ func _UserService_UserUploadProfileImage_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UserGetProfilePic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UserGetProfilePic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UserGetProfilePic",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UserGetProfilePic(ctx, req.(*GetUserById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1159,6 +1191,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserUploadProfileImage",
 			Handler:    _UserService_UserUploadProfileImage_Handler,
+		},
+		{
+			MethodName: "UserGetProfilePic",
+			Handler:    _UserService_UserGetProfilePic_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
