@@ -52,6 +52,7 @@ type UserServiceClient interface {
 	UserGetAddress(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*AddressResponse, error)
 	UserUploadProfileImage(ctx context.Context, in *UserImageRequest, opts ...grpc.CallOption) (*UserImageResponse, error)
 	UserGetProfilePic(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*UserImageResponse, error)
+	UserAppliedJobs(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_UserAppliedJobsClient, error)
 }
 
 type userServiceClient struct {
@@ -415,6 +416,38 @@ func (c *userServiceClient) UserGetProfilePic(ctx context.Context, in *GetUserBy
 	return out, nil
 }
 
+func (c *userServiceClient) UserAppliedJobs(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_UserAppliedJobsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[4], "/user.UserService/UserAppliedJobs", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceUserAppliedJobsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_UserAppliedJobsClient interface {
+	Recv() (*JobApplyRequest, error)
+	grpc.ClientStream
+}
+
+type userServiceUserAppliedJobsClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceUserAppliedJobsClient) Recv() (*JobApplyRequest, error) {
+	m := new(JobApplyRequest)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -448,6 +481,7 @@ type UserServiceServer interface {
 	UserGetAddress(context.Context, *GetUserById) (*AddressResponse, error)
 	UserUploadProfileImage(context.Context, *UserImageRequest) (*UserImageResponse, error)
 	UserGetProfilePic(context.Context, *GetUserById) (*UserImageResponse, error)
+	UserAppliedJobs(*GetUserById, UserService_UserAppliedJobsServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -541,6 +575,9 @@ func (UnimplementedUserServiceServer) UserUploadProfileImage(context.Context, *U
 }
 func (UnimplementedUserServiceServer) UserGetProfilePic(context.Context, *GetUserById) (*UserImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserGetProfilePic not implemented")
+}
+func (UnimplementedUserServiceServer) UserAppliedJobs(*GetUserById, UserService_UserAppliedJobsServer) error {
+	return status.Errorf(codes.Unimplemented, "method UserAppliedJobs not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1089,6 +1126,27 @@ func _UserService_UserGetProfilePic_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UserAppliedJobs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).UserAppliedJobs(m, &userServiceUserAppliedJobsServer{stream})
+}
+
+type UserService_UserAppliedJobsServer interface {
+	Send(*JobApplyRequest) error
+	grpc.ServerStream
+}
+
+type userServiceUserAppliedJobsServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceUserAppliedJobsServer) Send(m *JobApplyRequest) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1216,6 +1274,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllLinksUser",
 			Handler:       _UserService_GetAllLinksUser_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "UserAppliedJobs",
+			Handler:       _UserService_UserAppliedJobs_Handler,
 			ServerStreams: true,
 		},
 	},
