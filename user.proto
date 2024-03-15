@@ -134,5 +134,5 @@ service UserService{
     rpc UserGetAddress(GetUserById)returns(AddressResponse);
     rpc UserUploadProfileImage(UserImageRequest)returns(UserImageResponse);
     rpc UserGetProfilePic(GetUserById)returns(UserImageResponse);
-    rpc UserAppliedJobs(GetUserById)returns(stream JobApplyRequest);
+    rpc UserAppliedJobs(GetUserById)returns(stream JobApplyRequest){}
 }
