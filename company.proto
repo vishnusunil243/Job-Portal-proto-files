@@ -44,16 +44,17 @@ message AddJobRequest {
 }
 
 message JobResponse {
-    string company = 1;
-    string designation = 2;
-    SalaryRange salaryrange = 3;
-    int32 vacancy = 4;
-    int32 hired = 5;
-    int32 capacity=6;
-    string posted_on = 7;
-    string valid_until = 8;
-    string status = 9;
-    string minexperience=10;
+    string id=1;
+    string company = 2;
+    string designation = 3;
+    SalaryRange salaryrange = 4;
+    int32 vacancy = 5;
+    int32 hired = 6;
+    int32 capacity=7;
+    string posted_on = 8;
+    string valid_until = 9;
+    string status = 10;
+    string minexperience=11;
 }
 
 message UpdateJobRequest {
