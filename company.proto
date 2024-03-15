@@ -124,6 +124,13 @@ message CompanyEditPhoneRequest{
     string companyId=1;
     string phone=2;
 }
+message CompanyImageRequest{
+    string objectName=1;
+    string filePath=2;
+}
+message CompanyImageResponse{
+    string url=1;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -148,4 +155,5 @@ service CompanyService {
     rpc CompanyGetAddress(GetJobByCompanyId)returns(CompanyAddressResponse);
     rpc CompanyEditName(CompanyEditNameRequest)returns(google.protobuf.Empty);
     rpc CompanyEditPhone(CompanyEditPhoneRequest)returns(google.protobuf.Empty);
+    rpc CompanyUploadProfileImage(CompanyImageRequest)returns(CompanyImageResponse);
 }
