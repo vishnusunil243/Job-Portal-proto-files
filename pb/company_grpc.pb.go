@@ -46,6 +46,7 @@ type CompanyServiceClient interface {
 	CompanyEditName(ctx context.Context, in *CompanyEditNameRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyEditPhone(ctx context.Context, in *CompanyEditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyUploadProfileImage(ctx context.Context, in *CompanyImageRequest, opts ...grpc.CallOption) (*CompanyImageResponse, error)
+	GetProfilePic(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyImageResponse, error)
 }
 
 type companyServiceClient struct {
@@ -355,6 +356,15 @@ func (c *companyServiceClient) CompanyUploadProfileImage(ctx context.Context, in
 	return out, nil
 }
 
+func (c *companyServiceClient) GetProfilePic(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyImageResponse, error) {
+	out := new(CompanyImageResponse)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/GetProfilePic", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -382,6 +392,7 @@ type CompanyServiceServer interface {
 	CompanyEditName(context.Context, *CompanyEditNameRequest) (*emptypb.Empty, error)
 	CompanyEditPhone(context.Context, *CompanyEditPhoneRequest) (*emptypb.Empty, error)
 	CompanyUploadProfileImage(context.Context, *CompanyImageRequest) (*CompanyImageResponse, error)
+	GetProfilePic(context.Context, *GetJobByCompanyId) (*CompanyImageResponse, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -457,6 +468,9 @@ func (UnimplementedCompanyServiceServer) CompanyEditPhone(context.Context, *Comp
 }
 func (UnimplementedCompanyServiceServer) CompanyUploadProfileImage(context.Context, *CompanyImageRequest) (*CompanyImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompanyUploadProfileImage not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetProfilePic(context.Context, *GetJobByCompanyId) (*CompanyImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfilePic not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -897,6 +911,24 @@ func _CompanyService_CompanyUploadProfileImage_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_GetProfilePic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobByCompanyId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetProfilePic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/GetProfilePic",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetProfilePic(ctx, req.(*GetJobByCompanyId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -979,6 +1011,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CompanyUploadProfileImage",
 			Handler:    _CompanyService_CompanyUploadProfileImage_Handler,
+		},
+		{
+			MethodName: "GetProfilePic",
+			Handler:    _CompanyService_GetProfilePic_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

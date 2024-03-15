@@ -22,7 +22,6 @@ message CompanySignupResponse {
     string name = 3;
     string phone = 4;
     int32 categoryId=5;
-    string image=6;
 }
 
 message CompanyLoginRequest {
@@ -159,4 +158,5 @@ service CompanyService {
     rpc CompanyEditName(CompanyEditNameRequest)returns(google.protobuf.Empty);
     rpc CompanyEditPhone(CompanyEditPhoneRequest)returns(google.protobuf.Empty);
     rpc CompanyUploadProfileImage(CompanyImageRequest)returns(CompanyImageResponse);
+    rpc GetProfilePic(GetJobByCompanyId)returns(CompanyImageResponse);
 }
