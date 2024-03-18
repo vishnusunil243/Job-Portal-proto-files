@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SearchServiceClient interface {
 	AddSearchHistory(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetSearchHistory(ctx context.Context, in *UserId, opts ...grpc.CallOption) (SearchService_GetSearchHistoryClient, error)
+	GetSearchHistory(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*SearchResponse, error)
 }
 
 type searchServiceClient struct {
@@ -44,36 +44,13 @@ func (c *searchServiceClient) AddSearchHistory(ctx context.Context, in *SearchRe
 	return out, nil
 }
 
-func (c *searchServiceClient) GetSearchHistory(ctx context.Context, in *UserId, opts ...grpc.CallOption) (SearchService_GetSearchHistoryClient, error) {
-	stream, err := c.cc.NewStream(ctx, &SearchService_ServiceDesc.Streams[0], "/user.SearchService/GetSearchHistory", opts...)
+func (c *searchServiceClient) GetSearchHistory(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*SearchResponse, error) {
+	out := new(SearchResponse)
+	err := c.cc.Invoke(ctx, "/user.SearchService/GetSearchHistory", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &searchServiceGetSearchHistoryClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type SearchService_GetSearchHistoryClient interface {
-	Recv() (*SearchResponse, error)
-	grpc.ClientStream
-}
-
-type searchServiceGetSearchHistoryClient struct {
-	grpc.ClientStream
-}
-
-func (x *searchServiceGetSearchHistoryClient) Recv() (*SearchResponse, error) {
-	m := new(SearchResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // SearchServiceServer is the server API for SearchService service.
@@ -81,7 +58,7 @@ func (x *searchServiceGetSearchHistoryClient) Recv() (*SearchResponse, error) {
 // for forward compatibility
 type SearchServiceServer interface {
 	AddSearchHistory(context.Context, *SearchRequest) (*emptypb.Empty, error)
-	GetSearchHistory(*UserId, SearchService_GetSearchHistoryServer) error
+	GetSearchHistory(context.Context, *UserId) (*SearchResponse, error)
 	mustEmbedUnimplementedSearchServiceServer()
 }
 
@@ -92,8 +69,8 @@ type UnimplementedSearchServiceServer struct {
 func (UnimplementedSearchServiceServer) AddSearchHistory(context.Context, *SearchRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSearchHistory not implemented")
 }
-func (UnimplementedSearchServiceServer) GetSearchHistory(*UserId, SearchService_GetSearchHistoryServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetSearchHistory not implemented")
+func (UnimplementedSearchServiceServer) GetSearchHistory(context.Context, *UserId) (*SearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSearchHistory not implemented")
 }
 func (UnimplementedSearchServiceServer) mustEmbedUnimplementedSearchServiceServer() {}
 
@@ -126,25 +103,22 @@ func _SearchService_AddSearchHistory_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SearchService_GetSearchHistory_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(UserId)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _SearchService_GetSearchHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserId)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(SearchServiceServer).GetSearchHistory(m, &searchServiceGetSearchHistoryServer{stream})
-}
-
-type SearchService_GetSearchHistoryServer interface {
-	Send(*SearchResponse) error
-	grpc.ServerStream
-}
-
-type searchServiceGetSearchHistoryServer struct {
-	grpc.ServerStream
-}
-
-func (x *searchServiceGetSearchHistoryServer) Send(m *SearchResponse) error {
-	return x.ServerStream.SendMsg(m)
+	if interceptor == nil {
+		return srv.(SearchServiceServer).GetSearchHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.SearchService/GetSearchHistory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SearchServiceServer).GetSearchHistory(ctx, req.(*UserId))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 // SearchService_ServiceDesc is the grpc.ServiceDesc for SearchService service.
@@ -158,13 +132,11 @@ var SearchService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "AddSearchHistory",
 			Handler:    _SearchService_AddSearchHistory_Handler,
 		},
-	},
-	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "GetSearchHistory",
-			Handler:       _SearchService_GetSearchHistory_Handler,
-			ServerStreams: true,
+			MethodName: "GetSearchHistory",
+			Handler:    _SearchService_GetSearchHistory_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "search.proto",
 }

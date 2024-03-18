@@ -18,5 +18,5 @@ message SearchResponse{
 }
 service SearchService{
     rpc AddSearchHistory(SearchRequest)returns(google.protobuf.Empty);
-    rpc GetSearchHistory(UserId)returns(stream SearchResponse);
+    rpc GetSearchHistory(UserId)returns(SearchResponse);
 }
