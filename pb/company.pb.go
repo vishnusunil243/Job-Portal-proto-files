@@ -1464,6 +1464,61 @@ func (x *CompanyImageResponse) GetUrl() string {
 	return ""
 }
 
+type DesignationRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId      string `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	Designation string `protobuf:"bytes,2,opt,name=designation,proto3" json:"designation,omitempty"`
+}
+
+func (x *DesignationRequest) Reset() {
+	*x = DesignationRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_company_proto_msgTypes[21]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DesignationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DesignationRequest) ProtoMessage() {}
+
+func (x *DesignationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_proto_msgTypes[21]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DesignationRequest.ProtoReflect.Descriptor instead.
+func (*DesignationRequest) Descriptor() ([]byte, []int) {
+	return file_company_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *DesignationRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *DesignationRequest) GetDesignation() string {
+	if x != nil {
+		return x.Designation
+	}
+	return ""
+}
+
 var File_company_proto protoreflect.FileDescriptor
 
 var file_company_proto_rawDesc = []byte{
@@ -1627,7 +1682,12 @@ var file_company_proto_rawDesc = []byte{
 	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x49,
 	0x64, 0x22, 0x28, 0x0a, 0x14, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x49, 0x6d, 0x61, 0x67,
 	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x32, 0x8d, 0x0d, 0x0a, 0x0e,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x22, 0x4e, 0x0a, 0x12, 0x44,
+	0x65, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73,
+	0x69, 0x67, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x64, 0x65, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x32, 0xd6, 0x0d, 0x0a, 0x0e,
 	0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x48,
 	0x0a, 0x0d, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x12,
 	0x1a, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x53, 0x69,
@@ -1732,8 +1792,13 @@ var file_company_proto_rawDesc = []byte{
 	0x69, 0x6c, 0x65, 0x50, 0x69, 0x63, 0x12, 0x17, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x47, 0x65,
 	0x74, 0x4a, 0x6f, 0x62, 0x42, 0x79, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x49, 0x64, 0x1a,
 	0x1a, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x49, 0x6d,
-	0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x06, 0x5a, 0x04, 0x2e,
-	0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x47, 0x0a, 0x16, 0x4a,
+	0x6f, 0x62, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x42, 0x79, 0x44, 0x65, 0x73, 0x69, 0x67, 0x6e,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x18, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x44, 0x65, 0x73,
+	0x69, 0x67, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x11, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x4a, 0x6f, 0x62, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x30, 0x01, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1748,7 +1813,7 @@ func file_company_proto_rawDescGZIP() []byte {
 	return file_company_proto_rawDescData
 }
 
-var file_company_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_company_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_company_proto_goTypes = []interface{}{
 	(*CompanySignupRequest)(nil),     // 0: user.CompanySignupRequest
 	(*CompanySignupResponse)(nil),    // 1: user.CompanySignupResponse
@@ -1771,7 +1836,8 @@ var file_company_proto_goTypes = []interface{}{
 	(*CompanyEditPhoneRequest)(nil),  // 18: user.CompanyEditPhoneRequest
 	(*CompanyImageRequest)(nil),      // 19: user.CompanyImageRequest
 	(*CompanyImageResponse)(nil),     // 20: user.CompanyImageResponse
-	(*emptypb.Empty)(nil),            // 21: google.protobuf.Empty
+	(*DesignationRequest)(nil),       // 21: user.DesignationRequest
+	(*emptypb.Empty)(nil),            // 22: google.protobuf.Empty
 }
 var file_company_proto_depIdxs = []int32{
 	3,  // 0: user.AddJobRequest.salaryrange:type_name -> user.SalaryRange
@@ -1782,7 +1848,7 @@ var file_company_proto_depIdxs = []int32{
 	4,  // 5: user.CompanyService.AddJobs:input_type -> user.AddJobRequest
 	6,  // 6: user.CompanyService.UpdateJobs:input_type -> user.UpdateJobRequest
 	7,  // 7: user.CompanyService.DeleteJob:input_type -> user.GetJobById
-	21, // 8: user.CompanyService.GetAllJobs:input_type -> google.protobuf.Empty
+	22, // 8: user.CompanyService.GetAllJobs:input_type -> google.protobuf.Empty
 	7,  // 9: user.CompanyService.GetJob:input_type -> user.GetJobById
 	8,  // 10: user.CompanyService.GetAllJobsForCompany:input_type -> user.GetJobByCompanyId
 	9,  // 11: user.CompanyService.CompanyAddJobSkill:input_type -> user.AddJobSkillRequest
@@ -1801,32 +1867,34 @@ var file_company_proto_depIdxs = []int32{
 	18, // 24: user.CompanyService.CompanyEditPhone:input_type -> user.CompanyEditPhoneRequest
 	19, // 25: user.CompanyService.CompanyUploadProfileImage:input_type -> user.CompanyImageRequest
 	8,  // 26: user.CompanyService.GetProfilePic:input_type -> user.GetJobByCompanyId
-	1,  // 27: user.CompanyService.CompanySignup:output_type -> user.CompanySignupResponse
-	1,  // 28: user.CompanyService.CompanyLogin:output_type -> user.CompanySignupResponse
-	5,  // 29: user.CompanyService.AddJobs:output_type -> user.JobResponse
-	21, // 30: user.CompanyService.UpdateJobs:output_type -> google.protobuf.Empty
-	21, // 31: user.CompanyService.DeleteJob:output_type -> google.protobuf.Empty
-	5,  // 32: user.CompanyService.GetAllJobs:output_type -> user.JobResponse
-	5,  // 33: user.CompanyService.GetJob:output_type -> user.JobResponse
-	5,  // 34: user.CompanyService.GetAllJobsForCompany:output_type -> user.JobResponse
-	21, // 35: user.CompanyService.CompanyAddJobSkill:output_type -> google.protobuf.Empty
-	21, // 36: user.CompanyService.CompanyUpdateJobSkill:output_type -> google.protobuf.Empty
-	10, // 37: user.CompanyService.GetAllJobSkill:output_type -> user.JobSkillResponse
-	21, // 38: user.CompanyService.DeleteJobSkill:output_type -> google.protobuf.Empty
-	21, // 39: user.CompanyService.CompanyAddLink:output_type -> google.protobuf.Empty
-	21, // 40: user.CompanyService.CompanyDeleteLink:output_type -> google.protobuf.Empty
-	14, // 41: user.CompanyService.CompanyGetAllLink:output_type -> user.CompanyLinkResponse
-	21, // 42: user.CompanyService.CompanyCreateProfile:output_type -> google.protobuf.Empty
-	1,  // 43: user.CompanyService.GetCompanyById:output_type -> user.CompanySignupResponse
-	21, // 44: user.CompanyService.CompanyAddAddress:output_type -> google.protobuf.Empty
-	21, // 45: user.CompanyService.CompanyEditAddress:output_type -> google.protobuf.Empty
-	16, // 46: user.CompanyService.CompanyGetAddress:output_type -> user.CompanyAddressResponse
-	21, // 47: user.CompanyService.CompanyEditName:output_type -> google.protobuf.Empty
-	21, // 48: user.CompanyService.CompanyEditPhone:output_type -> google.protobuf.Empty
-	20, // 49: user.CompanyService.CompanyUploadProfileImage:output_type -> user.CompanyImageResponse
-	20, // 50: user.CompanyService.GetProfilePic:output_type -> user.CompanyImageResponse
-	27, // [27:51] is the sub-list for method output_type
-	3,  // [3:27] is the sub-list for method input_type
+	21, // 27: user.CompanyService.JobSearchByDesignation:input_type -> user.DesignationRequest
+	1,  // 28: user.CompanyService.CompanySignup:output_type -> user.CompanySignupResponse
+	1,  // 29: user.CompanyService.CompanyLogin:output_type -> user.CompanySignupResponse
+	5,  // 30: user.CompanyService.AddJobs:output_type -> user.JobResponse
+	22, // 31: user.CompanyService.UpdateJobs:output_type -> google.protobuf.Empty
+	22, // 32: user.CompanyService.DeleteJob:output_type -> google.protobuf.Empty
+	5,  // 33: user.CompanyService.GetAllJobs:output_type -> user.JobResponse
+	5,  // 34: user.CompanyService.GetJob:output_type -> user.JobResponse
+	5,  // 35: user.CompanyService.GetAllJobsForCompany:output_type -> user.JobResponse
+	22, // 36: user.CompanyService.CompanyAddJobSkill:output_type -> google.protobuf.Empty
+	22, // 37: user.CompanyService.CompanyUpdateJobSkill:output_type -> google.protobuf.Empty
+	10, // 38: user.CompanyService.GetAllJobSkill:output_type -> user.JobSkillResponse
+	22, // 39: user.CompanyService.DeleteJobSkill:output_type -> google.protobuf.Empty
+	22, // 40: user.CompanyService.CompanyAddLink:output_type -> google.protobuf.Empty
+	22, // 41: user.CompanyService.CompanyDeleteLink:output_type -> google.protobuf.Empty
+	14, // 42: user.CompanyService.CompanyGetAllLink:output_type -> user.CompanyLinkResponse
+	22, // 43: user.CompanyService.CompanyCreateProfile:output_type -> google.protobuf.Empty
+	1,  // 44: user.CompanyService.GetCompanyById:output_type -> user.CompanySignupResponse
+	22, // 45: user.CompanyService.CompanyAddAddress:output_type -> google.protobuf.Empty
+	22, // 46: user.CompanyService.CompanyEditAddress:output_type -> google.protobuf.Empty
+	16, // 47: user.CompanyService.CompanyGetAddress:output_type -> user.CompanyAddressResponse
+	22, // 48: user.CompanyService.CompanyEditName:output_type -> google.protobuf.Empty
+	22, // 49: user.CompanyService.CompanyEditPhone:output_type -> google.protobuf.Empty
+	20, // 50: user.CompanyService.CompanyUploadProfileImage:output_type -> user.CompanyImageResponse
+	20, // 51: user.CompanyService.GetProfilePic:output_type -> user.CompanyImageResponse
+	5,  // 52: user.CompanyService.JobSearchByDesignation:output_type -> user.JobResponse
+	28, // [28:53] is the sub-list for method output_type
+	3,  // [3:28] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
@@ -2090,6 +2158,18 @@ func file_company_proto_init() {
 				return nil
 			}
 		}
+		file_company_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DesignationRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -2097,7 +2177,7 @@ func file_company_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_company_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

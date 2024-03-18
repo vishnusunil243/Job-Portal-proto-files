@@ -134,6 +134,10 @@ message CompanyImageRequest{
 message CompanyImageResponse{
     string url=1;
 }
+message DesignationRequest{
+    string userId=1;
+    string designation=2;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -160,4 +164,5 @@ service CompanyService {
     rpc CompanyEditPhone(CompanyEditPhoneRequest)returns(google.protobuf.Empty);
     rpc CompanyUploadProfileImage(CompanyImageRequest)returns(CompanyImageResponse);
     rpc GetProfilePic(GetJobByCompanyId)returns(CompanyImageResponse);
+    rpc JobSearchByDesignation(DesignationRequest)returns(stream JobResponse);
 }
