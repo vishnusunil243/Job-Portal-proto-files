@@ -139,6 +139,9 @@ message JobSearchRequest{
     string designation=2;
     string companyName=3;
 }
+message GetHomeRequest{
+    string userId=1;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -166,4 +169,5 @@ service CompanyService {
     rpc CompanyUploadProfileImage(CompanyImageRequest)returns(CompanyImageResponse);
     rpc GetProfilePic(GetJobByCompanyId)returns(CompanyImageResponse);
     rpc JobSearch(JobSearchRequest)returns(stream JobResponse);
+    rpc GetHome(GetHomeRequest)returns(stream JobResponse);
 }

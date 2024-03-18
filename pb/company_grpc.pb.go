@@ -48,6 +48,7 @@ type CompanyServiceClient interface {
 	CompanyUploadProfileImage(ctx context.Context, in *CompanyImageRequest, opts ...grpc.CallOption) (*CompanyImageResponse, error)
 	GetProfilePic(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyImageResponse, error)
 	JobSearch(ctx context.Context, in *JobSearchRequest, opts ...grpc.CallOption) (CompanyService_JobSearchClient, error)
+	GetHome(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetHomeClient, error)
 }
 
 type companyServiceClient struct {
@@ -398,6 +399,38 @@ func (x *companyServiceJobSearchClient) Recv() (*JobResponse, error) {
 	return m, nil
 }
 
+func (c *companyServiceClient) GetHome(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetHomeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[5], "/user.CompanyService/GetHome", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &companyServiceGetHomeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type CompanyService_GetHomeClient interface {
+	Recv() (*JobResponse, error)
+	grpc.ClientStream
+}
+
+type companyServiceGetHomeClient struct {
+	grpc.ClientStream
+}
+
+func (x *companyServiceGetHomeClient) Recv() (*JobResponse, error) {
+	m := new(JobResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -427,6 +460,7 @@ type CompanyServiceServer interface {
 	CompanyUploadProfileImage(context.Context, *CompanyImageRequest) (*CompanyImageResponse, error)
 	GetProfilePic(context.Context, *GetJobByCompanyId) (*CompanyImageResponse, error)
 	JobSearch(*JobSearchRequest, CompanyService_JobSearchServer) error
+	GetHome(*GetHomeRequest, CompanyService_GetHomeServer) error
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -508,6 +542,9 @@ func (UnimplementedCompanyServiceServer) GetProfilePic(context.Context, *GetJobB
 }
 func (UnimplementedCompanyServiceServer) JobSearch(*JobSearchRequest, CompanyService_JobSearchServer) error {
 	return status.Errorf(codes.Unimplemented, "method JobSearch not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetHome(*GetHomeRequest, CompanyService_GetHomeServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetHome not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -987,6 +1024,27 @@ func (x *companyServiceJobSearchServer) Send(m *JobResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _CompanyService_GetHome_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetHomeRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CompanyServiceServer).GetHome(m, &companyServiceGetHomeServer{stream})
+}
+
+type CompanyService_GetHomeServer interface {
+	Send(*JobResponse) error
+	grpc.ServerStream
+}
+
+type companyServiceGetHomeServer struct {
+	grpc.ServerStream
+}
+
+func (x *companyServiceGetHomeServer) Send(m *JobResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1099,6 +1157,11 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "JobSearch",
 			Handler:       _CompanyService_JobSearch_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetHome",
+			Handler:       _CompanyService_GetHome_Handler,
 			ServerStreams: true,
 		},
 	},
