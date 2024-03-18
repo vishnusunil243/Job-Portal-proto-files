@@ -137,6 +137,7 @@ message CompanyImageResponse{
 message JobSearchRequest{
     string userId=1;
     string designation=2;
+    string companyName=3;
 }
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
