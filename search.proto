@@ -10,7 +10,13 @@ message SearchRequest{
     string userId=1;
     string keyword=2;
 } 
-
+message UserId{
+    string userId=1;
+}
+message SearchResponse{
+    string designation=1;
+}
 service SearchService{
     rpc AddSearchHistory(SearchRequest)returns(google.protobuf.Empty);
+    rpc GetSearchHistory(UserId)returns(stream SearchResponse);
 }
