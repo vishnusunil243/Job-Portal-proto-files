@@ -1406,6 +1406,61 @@ func (x *GetUserResponse) GetWeightage() float32 {
 	return 0
 }
 
+type AddExperienceRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId     string `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	Experience string `protobuf:"bytes,2,opt,name=experience,proto3" json:"experience,omitempty"`
+}
+
+func (x *AddExperienceRequest) Reset() {
+	*x = AddExperienceRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_proto_msgTypes[23]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddExperienceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddExperienceRequest) ProtoMessage() {}
+
+func (x *AddExperienceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[23]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddExperienceRequest.ProtoReflect.Descriptor instead.
+func (*AddExperienceRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *AddExperienceRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *AddExperienceRequest) GetExperience() string {
+	if x != nil {
+		return x.Experience
+	}
+	return ""
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 var file_user_proto_rawDesc = []byte{
@@ -1526,8 +1581,13 @@ var file_user_proto_rawDesc = []byte{
 	0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x68,
 	0x6f, 0x6e, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65,
 	0x12, 0x1c, 0x0a, 0x09, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x61, 0x67, 0x65, 0x18, 0x05, 0x20,
-	0x01, 0x28, 0x02, 0x52, 0x09, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x61, 0x67, 0x65, 0x32, 0xf5,
-	0x0f, 0x0a, 0x0b, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3f,
+	0x01, 0x28, 0x02, 0x52, 0x09, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x61, 0x67, 0x65, 0x22, 0x4e,
+	0x0a, 0x14, 0x41, 0x64, 0x64, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1e,
+	0x0a, 0x0a, 0x65, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0a, 0x65, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x32, 0xba,
+	0x10, 0x0a, 0x0b, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3f,
 	0x0a, 0x0a, 0x55, 0x73, 0x65, 0x72, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x12, 0x17, 0x2e, 0x75,
 	0x73, 0x65, 0x72, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x55, 0x73, 0x65,
@@ -1654,8 +1714,12 @@ var file_user_proto_rawDesc = []byte{
 	0x42, 0x79, 0x4a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x12, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x4a,
 	0x6f, 0x62, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x75, 0x73,
 	0x65, 0x72, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x30, 0x01, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x65, 0x22, 0x00, 0x30, 0x01, 0x12, 0x43, 0x0a, 0x0d, 0x41, 0x64, 0x64, 0x45, 0x78, 0x70,
+	0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x12, 0x1a, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x41,
+	0x64, 0x64, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x06, 0x5a, 0x04, 0x2e,
+	0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1670,7 +1734,7 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_user_proto_goTypes = []interface{}{
 	(*UserSignupRequest)(nil),      // 0: user.UserSignupRequest
 	(*UserSignupResponse)(nil),     // 1: user.UserSignupResponse
@@ -1695,7 +1759,8 @@ var file_user_proto_goTypes = []interface{}{
 	(*UserImageResponse)(nil),      // 20: user.UserImageResponse
 	(*JobIdRequest)(nil),           // 21: user.JobIdRequest
 	(*GetUserResponse)(nil),        // 22: user.GetUserResponse
-	(*emptypb.Empty)(nil),          // 23: google.protobuf.Empty
+	(*AddExperienceRequest)(nil),   // 23: user.AddExperienceRequest
+	(*emptypb.Empty)(nil),          // 24: google.protobuf.Empty
 }
 var file_user_proto_depIdxs = []int32{
 	0,  // 0: user.UserService.UserSignup:input_type -> user.UserSignupRequest
@@ -1705,13 +1770,13 @@ var file_user_proto_depIdxs = []int32{
 	6,  // 4: user.UserService.AddCategory:input_type -> user.AddCategoryRequest
 	8,  // 5: user.UserService.UpdateCategory:input_type -> user.UpdateCategoryRequest
 	5,  // 6: user.UserService.RemoveCategory:input_type -> user.DeleteSkillRequest
-	23, // 7: user.UserService.GetAllCategory:input_type -> google.protobuf.Empty
+	24, // 7: user.UserService.GetAllCategory:input_type -> google.protobuf.Empty
 	4,  // 8: user.UserService.AddSkillAdmin:input_type -> user.AddSkillRequest
 	5,  // 9: user.UserService.DeleteSkillAdmin:input_type -> user.DeleteSkillRequest
 	5,  // 10: user.UserService.AddSkillUser:input_type -> user.DeleteSkillRequest
 	5,  // 11: user.UserService.DeleteSkillUser:input_type -> user.DeleteSkillRequest
 	7,  // 12: user.UserService.AdminUpdateSkill:input_type -> user.SkillResponse
-	23, // 13: user.UserService.GetAllSkills:input_type -> google.protobuf.Empty
+	24, // 13: user.UserService.GetAllSkills:input_type -> google.protobuf.Empty
 	12, // 14: user.UserService.GetSkillById:input_type -> user.GetSkillByIdRequest
 	3,  // 15: user.UserService.GetAllSkillsUser:input_type -> user.GetUserById
 	9,  // 16: user.UserService.AddLinkUser:input_type -> user.AddLinkRequest
@@ -1729,39 +1794,41 @@ var file_user_proto_depIdxs = []int32{
 	3,  // 28: user.UserService.UserGetProfilePic:input_type -> user.GetUserById
 	3,  // 29: user.UserService.UserAppliedJobs:input_type -> user.GetUserById
 	21, // 30: user.UserService.GetAppliedUsersByJobId:input_type -> user.JobIdRequest
-	1,  // 31: user.UserService.UserSignup:output_type -> user.UserSignupResponse
-	1,  // 32: user.UserService.UserLogin:output_type -> user.UserSignupResponse
-	1,  // 33: user.UserService.AdminLogin:output_type -> user.UserSignupResponse
-	23, // 34: user.UserService.CreateProfile:output_type -> google.protobuf.Empty
-	23, // 35: user.UserService.AddCategory:output_type -> google.protobuf.Empty
-	23, // 36: user.UserService.UpdateCategory:output_type -> google.protobuf.Empty
-	23, // 37: user.UserService.RemoveCategory:output_type -> google.protobuf.Empty
-	8,  // 38: user.UserService.GetAllCategory:output_type -> user.UpdateCategoryRequest
-	23, // 39: user.UserService.AddSkillAdmin:output_type -> google.protobuf.Empty
-	23, // 40: user.UserService.DeleteSkillAdmin:output_type -> google.protobuf.Empty
-	23, // 41: user.UserService.AddSkillUser:output_type -> google.protobuf.Empty
-	23, // 42: user.UserService.DeleteSkillUser:output_type -> google.protobuf.Empty
-	23, // 43: user.UserService.AdminUpdateSkill:output_type -> google.protobuf.Empty
-	7,  // 44: user.UserService.GetAllSkills:output_type -> user.SkillResponse
-	7,  // 45: user.UserService.GetSkillById:output_type -> user.SkillResponse
-	7,  // 46: user.UserService.GetAllSkillsUser:output_type -> user.SkillResponse
-	23, // 47: user.UserService.AddLinkUser:output_type -> google.protobuf.Empty
-	23, // 48: user.UserService.DeleteLinkUser:output_type -> google.protobuf.Empty
-	11, // 49: user.UserService.GetAllLinksUser:output_type -> user.LinkResponse
-	8,  // 50: user.UserService.GetCategoryById:output_type -> user.UpdateCategoryRequest
-	1,  // 51: user.UserService.GetUser:output_type -> user.UserSignupResponse
-	23, // 52: user.UserService.JobApply:output_type -> google.protobuf.Empty
-	23, // 53: user.UserService.UserEditName:output_type -> google.protobuf.Empty
-	23, // 54: user.UserService.UserEditPhone:output_type -> google.protobuf.Empty
-	23, // 55: user.UserService.UserAddAddress:output_type -> google.protobuf.Empty
-	23, // 56: user.UserService.UserEditAddress:output_type -> google.protobuf.Empty
-	18, // 57: user.UserService.UserGetAddress:output_type -> user.AddressResponse
-	20, // 58: user.UserService.UserUploadProfileImage:output_type -> user.UserImageResponse
-	20, // 59: user.UserService.UserGetProfilePic:output_type -> user.UserImageResponse
-	14, // 60: user.UserService.UserAppliedJobs:output_type -> user.JobApplyRequest
-	22, // 61: user.UserService.GetAppliedUsersByJobId:output_type -> user.GetUserResponse
-	31, // [31:62] is the sub-list for method output_type
-	0,  // [0:31] is the sub-list for method input_type
+	23, // 31: user.UserService.AddExperience:input_type -> user.AddExperienceRequest
+	1,  // 32: user.UserService.UserSignup:output_type -> user.UserSignupResponse
+	1,  // 33: user.UserService.UserLogin:output_type -> user.UserSignupResponse
+	1,  // 34: user.UserService.AdminLogin:output_type -> user.UserSignupResponse
+	24, // 35: user.UserService.CreateProfile:output_type -> google.protobuf.Empty
+	24, // 36: user.UserService.AddCategory:output_type -> google.protobuf.Empty
+	24, // 37: user.UserService.UpdateCategory:output_type -> google.protobuf.Empty
+	24, // 38: user.UserService.RemoveCategory:output_type -> google.protobuf.Empty
+	8,  // 39: user.UserService.GetAllCategory:output_type -> user.UpdateCategoryRequest
+	24, // 40: user.UserService.AddSkillAdmin:output_type -> google.protobuf.Empty
+	24, // 41: user.UserService.DeleteSkillAdmin:output_type -> google.protobuf.Empty
+	24, // 42: user.UserService.AddSkillUser:output_type -> google.protobuf.Empty
+	24, // 43: user.UserService.DeleteSkillUser:output_type -> google.protobuf.Empty
+	24, // 44: user.UserService.AdminUpdateSkill:output_type -> google.protobuf.Empty
+	7,  // 45: user.UserService.GetAllSkills:output_type -> user.SkillResponse
+	7,  // 46: user.UserService.GetSkillById:output_type -> user.SkillResponse
+	7,  // 47: user.UserService.GetAllSkillsUser:output_type -> user.SkillResponse
+	24, // 48: user.UserService.AddLinkUser:output_type -> google.protobuf.Empty
+	24, // 49: user.UserService.DeleteLinkUser:output_type -> google.protobuf.Empty
+	11, // 50: user.UserService.GetAllLinksUser:output_type -> user.LinkResponse
+	8,  // 51: user.UserService.GetCategoryById:output_type -> user.UpdateCategoryRequest
+	1,  // 52: user.UserService.GetUser:output_type -> user.UserSignupResponse
+	24, // 53: user.UserService.JobApply:output_type -> google.protobuf.Empty
+	24, // 54: user.UserService.UserEditName:output_type -> google.protobuf.Empty
+	24, // 55: user.UserService.UserEditPhone:output_type -> google.protobuf.Empty
+	24, // 56: user.UserService.UserAddAddress:output_type -> google.protobuf.Empty
+	24, // 57: user.UserService.UserEditAddress:output_type -> google.protobuf.Empty
+	18, // 58: user.UserService.UserGetAddress:output_type -> user.AddressResponse
+	20, // 59: user.UserService.UserUploadProfileImage:output_type -> user.UserImageResponse
+	20, // 60: user.UserService.UserGetProfilePic:output_type -> user.UserImageResponse
+	14, // 61: user.UserService.UserAppliedJobs:output_type -> user.JobApplyRequest
+	22, // 62: user.UserService.GetAppliedUsersByJobId:output_type -> user.GetUserResponse
+	24, // 63: user.UserService.AddExperience:output_type -> google.protobuf.Empty
+	32, // [32:64] is the sub-list for method output_type
+	0,  // [0:32] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -2049,6 +2116,18 @@ func file_user_proto_init() {
 				return nil
 			}
 		}
+		file_user_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddExperienceRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -2056,7 +2135,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_user_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

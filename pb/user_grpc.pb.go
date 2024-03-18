@@ -54,6 +54,7 @@ type UserServiceClient interface {
 	UserGetProfilePic(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*UserImageResponse, error)
 	UserAppliedJobs(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_UserAppliedJobsClient, error)
 	GetAppliedUsersByJobId(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetAppliedUsersByJobIdClient, error)
+	AddExperience(ctx context.Context, in *AddExperienceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -481,6 +482,15 @@ func (x *userServiceGetAppliedUsersByJobIdClient) Recv() (*GetUserResponse, erro
 	return m, nil
 }
 
+func (c *userServiceClient) AddExperience(ctx context.Context, in *AddExperienceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddExperience", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -516,6 +526,7 @@ type UserServiceServer interface {
 	UserGetProfilePic(context.Context, *GetUserById) (*UserImageResponse, error)
 	UserAppliedJobs(*GetUserById, UserService_UserAppliedJobsServer) error
 	GetAppliedUsersByJobId(*JobIdRequest, UserService_GetAppliedUsersByJobIdServer) error
+	AddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -615,6 +626,9 @@ func (UnimplementedUserServiceServer) UserAppliedJobs(*GetUserById, UserService_
 }
 func (UnimplementedUserServiceServer) GetAppliedUsersByJobId(*JobIdRequest, UserService_GetAppliedUsersByJobIdServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAppliedUsersByJobId not implemented")
+}
+func (UnimplementedUserServiceServer) AddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddExperience not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1205,6 +1219,24 @@ func (x *userServiceGetAppliedUsersByJobIdServer) Send(m *GetUserResponse) error
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_AddExperience_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddExperienceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddExperience(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddExperience",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddExperience(ctx, req.(*AddExperienceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1311,6 +1343,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserGetProfilePic",
 			Handler:    _UserService_UserGetProfilePic_Handler,
+		},
+		{
+			MethodName: "AddExperience",
+			Handler:    _UserService_AddExperience_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -113,6 +113,10 @@ message GetUserResponse{
     string phone=4;
     float weightage=5;
 }
+message AddExperienceRequest{
+    string userId=1;
+    string experience=2;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -146,4 +150,5 @@ service UserService{
     rpc UserGetProfilePic(GetUserById)returns(UserImageResponse);
     rpc UserAppliedJobs(GetUserById)returns(stream JobApplyRequest){}
     rpc GetAppliedUsersByJobId(JobIdRequest)returns(stream GetUserResponse){}
+    rpc AddExperience(AddExperienceRequest)returns(google.protobuf.Empty);
 }
