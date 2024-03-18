@@ -111,7 +111,7 @@ message GetUserResponse{
     string name=2;
     string email=3;
     string phone=4;
-    repeated SkillResponse skills=5;
+    float weightage=5;
 }
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
