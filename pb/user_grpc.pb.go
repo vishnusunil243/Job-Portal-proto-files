@@ -55,6 +55,8 @@ type UserServiceClient interface {
 	UserAppliedJobs(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_UserAppliedJobsClient, error)
 	GetAppliedUsersByJobId(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetAppliedUsersByJobIdClient, error)
 	AddExperience(ctx context.Context, in *AddExperienceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddToShortlist(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetShortlist(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetShortlistClient, error)
 }
 
 type userServiceClient struct {
@@ -491,6 +493,47 @@ func (c *userServiceClient) AddExperience(ctx context.Context, in *AddExperience
 	return out, nil
 }
 
+func (c *userServiceClient) AddToShortlist(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddToShortlist", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetShortlist(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetShortlistClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[6], "/user.UserService/GetShortlist", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetShortlistClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetShortlistClient interface {
+	Recv() (*GetUserResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetShortlistClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetShortlistClient) Recv() (*GetUserResponse, error) {
+	m := new(GetUserResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -527,6 +570,8 @@ type UserServiceServer interface {
 	UserAppliedJobs(*GetUserById, UserService_UserAppliedJobsServer) error
 	GetAppliedUsersByJobId(*JobIdRequest, UserService_GetAppliedUsersByJobIdServer) error
 	AddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error)
+	AddToShortlist(context.Context, *AddToShortListRequest) (*emptypb.Empty, error)
+	GetShortlist(*JobIdRequest, UserService_GetShortlistServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -629,6 +674,12 @@ func (UnimplementedUserServiceServer) GetAppliedUsersByJobId(*JobIdRequest, User
 }
 func (UnimplementedUserServiceServer) AddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddExperience not implemented")
+}
+func (UnimplementedUserServiceServer) AddToShortlist(context.Context, *AddToShortListRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddToShortlist not implemented")
+}
+func (UnimplementedUserServiceServer) GetShortlist(*JobIdRequest, UserService_GetShortlistServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetShortlist not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1237,6 +1288,45 @@ func _UserService_AddExperience_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AddToShortlist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddToShortListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddToShortlist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddToShortlist",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddToShortlist(ctx, req.(*AddToShortListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetShortlist_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(JobIdRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetShortlist(m, &userServiceGetShortlistServer{stream})
+}
+
+type UserService_GetShortlistServer interface {
+	Send(*GetUserResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetShortlistServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetShortlistServer) Send(m *GetUserResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1348,6 +1438,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "AddExperience",
 			Handler:    _UserService_AddExperience_Handler,
 		},
+		{
+			MethodName: "AddToShortlist",
+			Handler:    _UserService_AddToShortlist_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1378,6 +1472,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAppliedUsersByJobId",
 			Handler:       _UserService_GetAppliedUsersByJobId_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetShortlist",
+			Handler:       _UserService_GetShortlist_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -118,6 +118,10 @@ message AddExperienceRequest{
     string userId=1;
     string experience=2;
 }
+message AddToShortListRequest{
+    string userId=1;
+    string jobId=2;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -152,4 +156,6 @@ service UserService{
     rpc UserAppliedJobs(GetUserById)returns(stream JobApplyRequest){}
     rpc GetAppliedUsersByJobId(JobIdRequest)returns(stream GetUserResponse){}
     rpc AddExperience(AddExperienceRequest)returns(google.protobuf.Empty);
+    rpc AddToShortlist(AddToShortListRequest)returns(google.protobuf.Empty);
+    rpc GetShortlist(JobIdRequest)returns(stream GetUserResponse){}
 }
