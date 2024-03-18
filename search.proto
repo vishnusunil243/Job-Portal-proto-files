@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package user;
+
+option go_package="./pb";
+
+import "google/protobuf/empty.proto";
+
+message SearchRequest{
+    string userId=1;
+    string keyword=2;
+} 
+
+service SearchService{
+    rpc AddSearchHistory(SearchRequest)returns(google.protobuf.Empty);
+}
