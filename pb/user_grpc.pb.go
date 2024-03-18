@@ -53,6 +53,7 @@ type UserServiceClient interface {
 	UserUploadProfileImage(ctx context.Context, in *UserImageRequest, opts ...grpc.CallOption) (*UserImageResponse, error)
 	UserGetProfilePic(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*UserImageResponse, error)
 	UserAppliedJobs(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_UserAppliedJobsClient, error)
+	GetAppliedUsersByJobId(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetAppliedUsersByJobIdClient, error)
 }
 
 type userServiceClient struct {
@@ -448,6 +449,38 @@ func (x *userServiceUserAppliedJobsClient) Recv() (*JobApplyRequest, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) GetAppliedUsersByJobId(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetAppliedUsersByJobIdClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[5], "/user.UserService/GetAppliedUsersByJobId", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAppliedUsersByJobIdClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAppliedUsersByJobIdClient interface {
+	Recv() (*GetUserResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAppliedUsersByJobIdClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAppliedUsersByJobIdClient) Recv() (*GetUserResponse, error) {
+	m := new(GetUserResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -482,6 +515,7 @@ type UserServiceServer interface {
 	UserUploadProfileImage(context.Context, *UserImageRequest) (*UserImageResponse, error)
 	UserGetProfilePic(context.Context, *GetUserById) (*UserImageResponse, error)
 	UserAppliedJobs(*GetUserById, UserService_UserAppliedJobsServer) error
+	GetAppliedUsersByJobId(*JobIdRequest, UserService_GetAppliedUsersByJobIdServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -578,6 +612,9 @@ func (UnimplementedUserServiceServer) UserGetProfilePic(context.Context, *GetUse
 }
 func (UnimplementedUserServiceServer) UserAppliedJobs(*GetUserById, UserService_UserAppliedJobsServer) error {
 	return status.Errorf(codes.Unimplemented, "method UserAppliedJobs not implemented")
+}
+func (UnimplementedUserServiceServer) GetAppliedUsersByJobId(*JobIdRequest, UserService_GetAppliedUsersByJobIdServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAppliedUsersByJobId not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1147,6 +1184,27 @@ func (x *userServiceUserAppliedJobsServer) Send(m *JobApplyRequest) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_GetAppliedUsersByJobId_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(JobIdRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAppliedUsersByJobId(m, &userServiceGetAppliedUsersByJobIdServer{stream})
+}
+
+type UserService_GetAppliedUsersByJobIdServer interface {
+	Send(*GetUserResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetAppliedUsersByJobIdServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAppliedUsersByJobIdServer) Send(m *GetUserResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1279,6 +1337,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "UserAppliedJobs",
 			Handler:       _UserService_UserAppliedJobs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAppliedUsersByJobId",
+			Handler:       _UserService_GetAppliedUsersByJobId_Handler,
 			ServerStreams: true,
 		},
 	},
