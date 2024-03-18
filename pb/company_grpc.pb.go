@@ -47,7 +47,7 @@ type CompanyServiceClient interface {
 	CompanyEditPhone(ctx context.Context, in *CompanyEditPhoneRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CompanyUploadProfileImage(ctx context.Context, in *CompanyImageRequest, opts ...grpc.CallOption) (*CompanyImageResponse, error)
 	GetProfilePic(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyImageResponse, error)
-	JobSearchByDesignation(ctx context.Context, in *DesignationRequest, opts ...grpc.CallOption) (CompanyService_JobSearchByDesignationClient, error)
+	JobSearch(ctx context.Context, in *JobSearchRequest, opts ...grpc.CallOption) (CompanyService_JobSearchClient, error)
 }
 
 type companyServiceClient struct {
@@ -366,12 +366,12 @@ func (c *companyServiceClient) GetProfilePic(ctx context.Context, in *GetJobByCo
 	return out, nil
 }
 
-func (c *companyServiceClient) JobSearchByDesignation(ctx context.Context, in *DesignationRequest, opts ...grpc.CallOption) (CompanyService_JobSearchByDesignationClient, error) {
-	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[4], "/user.CompanyService/JobSearchByDesignation", opts...)
+func (c *companyServiceClient) JobSearch(ctx context.Context, in *JobSearchRequest, opts ...grpc.CallOption) (CompanyService_JobSearchClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[4], "/user.CompanyService/JobSearch", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &companyServiceJobSearchByDesignationClient{stream}
+	x := &companyServiceJobSearchClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -381,16 +381,16 @@ func (c *companyServiceClient) JobSearchByDesignation(ctx context.Context, in *D
 	return x, nil
 }
 
-type CompanyService_JobSearchByDesignationClient interface {
+type CompanyService_JobSearchClient interface {
 	Recv() (*JobResponse, error)
 	grpc.ClientStream
 }
 
-type companyServiceJobSearchByDesignationClient struct {
+type companyServiceJobSearchClient struct {
 	grpc.ClientStream
 }
 
-func (x *companyServiceJobSearchByDesignationClient) Recv() (*JobResponse, error) {
+func (x *companyServiceJobSearchClient) Recv() (*JobResponse, error) {
 	m := new(JobResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -426,7 +426,7 @@ type CompanyServiceServer interface {
 	CompanyEditPhone(context.Context, *CompanyEditPhoneRequest) (*emptypb.Empty, error)
 	CompanyUploadProfileImage(context.Context, *CompanyImageRequest) (*CompanyImageResponse, error)
 	GetProfilePic(context.Context, *GetJobByCompanyId) (*CompanyImageResponse, error)
-	JobSearchByDesignation(*DesignationRequest, CompanyService_JobSearchByDesignationServer) error
+	JobSearch(*JobSearchRequest, CompanyService_JobSearchServer) error
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -506,8 +506,8 @@ func (UnimplementedCompanyServiceServer) CompanyUploadProfileImage(context.Conte
 func (UnimplementedCompanyServiceServer) GetProfilePic(context.Context, *GetJobByCompanyId) (*CompanyImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfilePic not implemented")
 }
-func (UnimplementedCompanyServiceServer) JobSearchByDesignation(*DesignationRequest, CompanyService_JobSearchByDesignationServer) error {
-	return status.Errorf(codes.Unimplemented, "method JobSearchByDesignation not implemented")
+func (UnimplementedCompanyServiceServer) JobSearch(*JobSearchRequest, CompanyService_JobSearchServer) error {
+	return status.Errorf(codes.Unimplemented, "method JobSearch not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -966,24 +966,24 @@ func _CompanyService_GetProfilePic_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CompanyService_JobSearchByDesignation_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(DesignationRequest)
+func _CompanyService_JobSearch_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(JobSearchRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(CompanyServiceServer).JobSearchByDesignation(m, &companyServiceJobSearchByDesignationServer{stream})
+	return srv.(CompanyServiceServer).JobSearch(m, &companyServiceJobSearchServer{stream})
 }
 
-type CompanyService_JobSearchByDesignationServer interface {
+type CompanyService_JobSearchServer interface {
 	Send(*JobResponse) error
 	grpc.ServerStream
 }
 
-type companyServiceJobSearchByDesignationServer struct {
+type companyServiceJobSearchServer struct {
 	grpc.ServerStream
 }
 
-func (x *companyServiceJobSearchByDesignationServer) Send(m *JobResponse) error {
+func (x *companyServiceJobSearchServer) Send(m *JobResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -1097,8 +1097,8 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "JobSearchByDesignation",
-			Handler:       _CompanyService_JobSearchByDesignation_Handler,
+			StreamName:    "JobSearch",
+			Handler:       _CompanyService_JobSearch_Handler,
 			ServerStreams: true,
 		},
 	},
