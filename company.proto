@@ -178,6 +178,6 @@ service CompanyService {
     rpc JobSearch(JobSearchRequest)returns(stream JobResponse);
     rpc GetHome(GetHomeRequest)returns(stream JobResponse);
     rpc NotifyMe(NotifyMeRequest)returns(google.protobuf.Empty);
-    rpc GetAllNotifyMe(GetJobByCompanyId)returns(stream NotifyMeResponse);
+    rpc GetAllNotifyMe(GetHomeRequest)returns(stream NotifyMeResponse);
     rpc CancelNotify(NotifyMeRequest)returns(google.protobuf.Empty);
 }

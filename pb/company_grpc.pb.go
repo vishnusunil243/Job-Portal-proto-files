@@ -50,7 +50,7 @@ type CompanyServiceClient interface {
 	JobSearch(ctx context.Context, in *JobSearchRequest, opts ...grpc.CallOption) (CompanyService_JobSearchClient, error)
 	GetHome(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetHomeClient, error)
 	NotifyMe(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetAllNotifyMe(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error)
+	GetAllNotifyMe(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error)
 	CancelNotify(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -443,7 +443,7 @@ func (c *companyServiceClient) NotifyMe(ctx context.Context, in *NotifyMeRequest
 	return out, nil
 }
 
-func (c *companyServiceClient) GetAllNotifyMe(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error) {
+func (c *companyServiceClient) GetAllNotifyMe(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[6], "/user.CompanyService/GetAllNotifyMe", opts...)
 	if err != nil {
 		return nil, err
@@ -515,7 +515,7 @@ type CompanyServiceServer interface {
 	JobSearch(*JobSearchRequest, CompanyService_JobSearchServer) error
 	GetHome(*GetHomeRequest, CompanyService_GetHomeServer) error
 	NotifyMe(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
-	GetAllNotifyMe(*GetJobByCompanyId, CompanyService_GetAllNotifyMeServer) error
+	GetAllNotifyMe(*GetHomeRequest, CompanyService_GetAllNotifyMeServer) error
 	CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
@@ -605,7 +605,7 @@ func (UnimplementedCompanyServiceServer) GetHome(*GetHomeRequest, CompanyService
 func (UnimplementedCompanyServiceServer) NotifyMe(context.Context, *NotifyMeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NotifyMe not implemented")
 }
-func (UnimplementedCompanyServiceServer) GetAllNotifyMe(*GetJobByCompanyId, CompanyService_GetAllNotifyMeServer) error {
+func (UnimplementedCompanyServiceServer) GetAllNotifyMe(*GetHomeRequest, CompanyService_GetAllNotifyMeServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllNotifyMe not implemented")
 }
 func (UnimplementedCompanyServiceServer) CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error) {
@@ -1129,7 +1129,7 @@ func _CompanyService_NotifyMe_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _CompanyService_GetAllNotifyMe_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(GetJobByCompanyId)
+	m := new(GetHomeRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
