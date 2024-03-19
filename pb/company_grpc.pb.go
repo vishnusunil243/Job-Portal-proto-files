@@ -49,6 +49,9 @@ type CompanyServiceClient interface {
 	GetProfilePic(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*CompanyImageResponse, error)
 	JobSearch(ctx context.Context, in *JobSearchRequest, opts ...grpc.CallOption) (CompanyService_JobSearchClient, error)
 	GetHome(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetHomeClient, error)
+	NotifyMe(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllNotifyMe(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error)
+	CancelNotify(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type companyServiceClient struct {
@@ -431,6 +434,56 @@ func (x *companyServiceGetHomeClient) Recv() (*JobResponse, error) {
 	return m, nil
 }
 
+func (c *companyServiceClient) NotifyMe(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/NotifyMe", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) GetAllNotifyMe(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[6], "/user.CompanyService/GetAllNotifyMe", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &companyServiceGetAllNotifyMeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type CompanyService_GetAllNotifyMeClient interface {
+	Recv() (*NotifyMeResponse, error)
+	grpc.ClientStream
+}
+
+type companyServiceGetAllNotifyMeClient struct {
+	grpc.ClientStream
+}
+
+func (x *companyServiceGetAllNotifyMeClient) Recv() (*NotifyMeResponse, error) {
+	m := new(NotifyMeResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *companyServiceClient) CancelNotify(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/CancelNotify", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -461,6 +514,9 @@ type CompanyServiceServer interface {
 	GetProfilePic(context.Context, *GetJobByCompanyId) (*CompanyImageResponse, error)
 	JobSearch(*JobSearchRequest, CompanyService_JobSearchServer) error
 	GetHome(*GetHomeRequest, CompanyService_GetHomeServer) error
+	NotifyMe(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
+	GetAllNotifyMe(*GetJobByCompanyId, CompanyService_GetAllNotifyMeServer) error
+	CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -545,6 +601,15 @@ func (UnimplementedCompanyServiceServer) JobSearch(*JobSearchRequest, CompanySer
 }
 func (UnimplementedCompanyServiceServer) GetHome(*GetHomeRequest, CompanyService_GetHomeServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetHome not implemented")
+}
+func (UnimplementedCompanyServiceServer) NotifyMe(context.Context, *NotifyMeRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NotifyMe not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetAllNotifyMe(*GetJobByCompanyId, CompanyService_GetAllNotifyMeServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllNotifyMe not implemented")
+}
+func (UnimplementedCompanyServiceServer) CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelNotify not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -1045,6 +1110,63 @@ func (x *companyServiceGetHomeServer) Send(m *JobResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _CompanyService_NotifyMe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyMeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).NotifyMe(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/NotifyMe",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).NotifyMe(ctx, req.(*NotifyMeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_GetAllNotifyMe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetJobByCompanyId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CompanyServiceServer).GetAllNotifyMe(m, &companyServiceGetAllNotifyMeServer{stream})
+}
+
+type CompanyService_GetAllNotifyMeServer interface {
+	Send(*NotifyMeResponse) error
+	grpc.ServerStream
+}
+
+type companyServiceGetAllNotifyMeServer struct {
+	grpc.ServerStream
+}
+
+func (x *companyServiceGetAllNotifyMeServer) Send(m *NotifyMeResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _CompanyService_CancelNotify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyMeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).CancelNotify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/CancelNotify",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).CancelNotify(ctx, req.(*NotifyMeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1132,6 +1254,14 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetProfilePic",
 			Handler:    _CompanyService_GetProfilePic_Handler,
 		},
+		{
+			MethodName: "NotifyMe",
+			Handler:    _CompanyService_NotifyMe_Handler,
+		},
+		{
+			MethodName: "CancelNotify",
+			Handler:    _CompanyService_CancelNotify_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1162,6 +1292,11 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetHome",
 			Handler:       _CompanyService_GetHome_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllNotifyMe",
+			Handler:       _CompanyService_GetAllNotifyMe_Handler,
 			ServerStreams: true,
 		},
 	},

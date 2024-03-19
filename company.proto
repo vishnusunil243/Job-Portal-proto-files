@@ -139,6 +139,13 @@ message JobSearchRequest{
     string designation=2;
     string companyName=3;
 }
+message NotifyMeRequest{
+    string userId=1;
+    string companyId=2;
+}
+message NotifyMeResponse{
+    string company=1;
+}
 message GetHomeRequest{
     string userId=1;
 }
@@ -170,4 +177,7 @@ service CompanyService {
     rpc GetProfilePic(GetJobByCompanyId)returns(CompanyImageResponse);
     rpc JobSearch(JobSearchRequest)returns(stream JobResponse);
     rpc GetHome(GetHomeRequest)returns(stream JobResponse);
+    rpc NotifyMe(NotifyMeRequest)returns(google.protobuf.Empty);
+    rpc GetAllNotifyMe(GetJobByCompanyId)returns(stream NotifyMeResponse);
+    rpc CancelNotify(NotifyMeRequest)returns(google.protobuf.Empty);
 }
