@@ -16,7 +16,19 @@ message VerifyOTPRequest{
 message VerifyOTPResponse{
     bool verified=1;
 }
+message AddNotificationRequest{
+    string userId=1;
+    string message=2;
+}
+message GetNotificationsByUserId{
+    string userId=1;
+}
+message NotificationResponse{
+    string message=1;
+}
 service EmailService{
     rpc SendOTP(SendOtpRequest)returns(google.protobuf.Empty);
     rpc VerifyOTP(VerifyOTPRequest)returns(VerifyOTPResponse);
+    rpc AddNotification(AddNotificationRequest)returns(google.protobuf.Empty);
+    rpc GetAllNotifications(GetNotificationsByUserId)returns(stream NotificationResponse);
 }
