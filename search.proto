@@ -18,9 +18,8 @@ message SearchResponse{
 }
 message UserReviewRequest{
    string userId=1;
-   string username=2;
-   string companyId=3;
-   string description=4;
+   string companyId=2;
+   string description=3;
 }
 message ReviewByCompanyId{
     string companyId=1;
