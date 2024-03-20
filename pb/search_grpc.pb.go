@@ -80,7 +80,7 @@ func (c *searchServiceClient) GetCompanyReview(ctx context.Context, in *ReviewBy
 }
 
 type SearchService_GetCompanyReviewClient interface {
-	Recv() (*UserReviewRequest, error)
+	Recv() (*ReviewResponse, error)
 	grpc.ClientStream
 }
 
@@ -88,8 +88,8 @@ type searchServiceGetCompanyReviewClient struct {
 	grpc.ClientStream
 }
 
-func (x *searchServiceGetCompanyReviewClient) Recv() (*UserReviewRequest, error) {
-	m := new(UserReviewRequest)
+func (x *searchServiceGetCompanyReviewClient) Recv() (*ReviewResponse, error) {
+	m := new(ReviewResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -199,7 +199,7 @@ func _SearchService_GetCompanyReview_Handler(srv interface{}, stream grpc.Server
 }
 
 type SearchService_GetCompanyReviewServer interface {
-	Send(*UserReviewRequest) error
+	Send(*ReviewResponse) error
 	grpc.ServerStream
 }
 
@@ -207,7 +207,7 @@ type searchServiceGetCompanyReviewServer struct {
 	grpc.ServerStream
 }
 
-func (x *searchServiceGetCompanyReviewServer) Send(m *UserReviewRequest) error {
+func (x *searchServiceGetCompanyReviewServer) Send(m *ReviewResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 

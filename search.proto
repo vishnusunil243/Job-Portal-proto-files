@@ -22,6 +22,12 @@ message UserReviewRequest{
    string description=3;
    int32 rating=4;
 }
+message ReviewResponse{
+    string userId=1;
+    string companyId=2;
+    string description=3;
+    int32 rating=4;
+ }
 message ReviewByCompanyId{
     string companyId=1;
 }
@@ -29,5 +35,5 @@ service SearchService{
     rpc AddSearchHistory(SearchRequest)returns(google.protobuf.Empty);
     rpc GetSearchHistory(UserId)returns(SearchResponse);
     rpc UserAddReview(UserReviewRequest)returns(google.protobuf.Empty);
-    rpc GetCompanyReview(ReviewByCompanyId)returns(stream UserReviewRequest){}
+    rpc GetCompanyReview(ReviewByCompanyId)returns(stream ReviewResponse){}
 }
