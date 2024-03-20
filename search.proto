@@ -37,4 +37,5 @@ service SearchService{
     rpc GetSearchHistory(UserId)returns(SearchResponse);
     rpc UserAddReview(UserReviewRequest)returns(google.protobuf.Empty);
     rpc GetCompanyReview(ReviewByCompanyId)returns(stream ReviewResponse){}
+    rpc RemoveReview(UserReviewRequest)returns(google.protobuf.Empty);
 }

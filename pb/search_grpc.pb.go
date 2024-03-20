@@ -27,6 +27,7 @@ type SearchServiceClient interface {
 	GetSearchHistory(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*SearchResponse, error)
 	UserAddReview(ctx context.Context, in *UserReviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetCompanyReview(ctx context.Context, in *ReviewByCompanyId, opts ...grpc.CallOption) (SearchService_GetCompanyReviewClient, error)
+	RemoveReview(ctx context.Context, in *UserReviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type searchServiceClient struct {
@@ -96,6 +97,15 @@ func (x *searchServiceGetCompanyReviewClient) Recv() (*ReviewResponse, error) {
 	return m, nil
 }
 
+func (c *searchServiceClient) RemoveReview(ctx context.Context, in *UserReviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.SearchService/RemoveReview", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SearchServiceServer is the server API for SearchService service.
 // All implementations must embed UnimplementedSearchServiceServer
 // for forward compatibility
@@ -104,6 +114,7 @@ type SearchServiceServer interface {
 	GetSearchHistory(context.Context, *UserId) (*SearchResponse, error)
 	UserAddReview(context.Context, *UserReviewRequest) (*emptypb.Empty, error)
 	GetCompanyReview(*ReviewByCompanyId, SearchService_GetCompanyReviewServer) error
+	RemoveReview(context.Context, *UserReviewRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedSearchServiceServer()
 }
 
@@ -122,6 +133,9 @@ func (UnimplementedSearchServiceServer) UserAddReview(context.Context, *UserRevi
 }
 func (UnimplementedSearchServiceServer) GetCompanyReview(*ReviewByCompanyId, SearchService_GetCompanyReviewServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetCompanyReview not implemented")
+}
+func (UnimplementedSearchServiceServer) RemoveReview(context.Context, *UserReviewRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveReview not implemented")
 }
 func (UnimplementedSearchServiceServer) mustEmbedUnimplementedSearchServiceServer() {}
 
@@ -211,6 +225,24 @@ func (x *searchServiceGetCompanyReviewServer) Send(m *ReviewResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _SearchService_RemoveReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SearchServiceServer).RemoveReview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.SearchService/RemoveReview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SearchServiceServer).RemoveReview(ctx, req.(*UserReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SearchService_ServiceDesc is the grpc.ServiceDesc for SearchService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,6 +261,10 @@ var SearchService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserAddReview",
 			Handler:    _SearchService_UserAddReview_Handler,
+		},
+		{
+			MethodName: "RemoveReview",
+			Handler:    _SearchService_RemoveReview_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
