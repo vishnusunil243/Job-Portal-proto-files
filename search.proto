@@ -20,6 +20,7 @@ message UserReviewRequest{
    string userId=1;
    string companyId=2;
    string description=3;
+   int32 rating=4;
 }
 message ReviewByCompanyId{
     string companyId=1;
