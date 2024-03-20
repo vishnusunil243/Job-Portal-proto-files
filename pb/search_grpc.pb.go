@@ -25,6 +25,8 @@ const _ = grpc.SupportPackageIsVersion7
 type SearchServiceClient interface {
 	AddSearchHistory(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetSearchHistory(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*SearchResponse, error)
+	UserAddReview(ctx context.Context, in *UserReviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCompanyReview(ctx context.Context, in *ReviewByCompanyId, opts ...grpc.CallOption) (SearchService_GetCompanyReviewClient, error)
 }
 
 type searchServiceClient struct {
@@ -53,12 +55,55 @@ func (c *searchServiceClient) GetSearchHistory(ctx context.Context, in *UserId, 
 	return out, nil
 }
 
+func (c *searchServiceClient) UserAddReview(ctx context.Context, in *UserReviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.SearchService/UserAddReview", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *searchServiceClient) GetCompanyReview(ctx context.Context, in *ReviewByCompanyId, opts ...grpc.CallOption) (SearchService_GetCompanyReviewClient, error) {
+	stream, err := c.cc.NewStream(ctx, &SearchService_ServiceDesc.Streams[0], "/user.SearchService/GetCompanyReview", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &searchServiceGetCompanyReviewClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type SearchService_GetCompanyReviewClient interface {
+	Recv() (*UserReviewRequest, error)
+	grpc.ClientStream
+}
+
+type searchServiceGetCompanyReviewClient struct {
+	grpc.ClientStream
+}
+
+func (x *searchServiceGetCompanyReviewClient) Recv() (*UserReviewRequest, error) {
+	m := new(UserReviewRequest)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // SearchServiceServer is the server API for SearchService service.
 // All implementations must embed UnimplementedSearchServiceServer
 // for forward compatibility
 type SearchServiceServer interface {
 	AddSearchHistory(context.Context, *SearchRequest) (*emptypb.Empty, error)
 	GetSearchHistory(context.Context, *UserId) (*SearchResponse, error)
+	UserAddReview(context.Context, *UserReviewRequest) (*emptypb.Empty, error)
+	GetCompanyReview(*ReviewByCompanyId, SearchService_GetCompanyReviewServer) error
 	mustEmbedUnimplementedSearchServiceServer()
 }
 
@@ -71,6 +116,12 @@ func (UnimplementedSearchServiceServer) AddSearchHistory(context.Context, *Searc
 }
 func (UnimplementedSearchServiceServer) GetSearchHistory(context.Context, *UserId) (*SearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSearchHistory not implemented")
+}
+func (UnimplementedSearchServiceServer) UserAddReview(context.Context, *UserReviewRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserAddReview not implemented")
+}
+func (UnimplementedSearchServiceServer) GetCompanyReview(*ReviewByCompanyId, SearchService_GetCompanyReviewServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetCompanyReview not implemented")
 }
 func (UnimplementedSearchServiceServer) mustEmbedUnimplementedSearchServiceServer() {}
 
@@ -121,6 +172,45 @@ func _SearchService_GetSearchHistory_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SearchService_UserAddReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SearchServiceServer).UserAddReview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.SearchService/UserAddReview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SearchServiceServer).UserAddReview(ctx, req.(*UserReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SearchService_GetCompanyReview_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ReviewByCompanyId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(SearchServiceServer).GetCompanyReview(m, &searchServiceGetCompanyReviewServer{stream})
+}
+
+type SearchService_GetCompanyReviewServer interface {
+	Send(*UserReviewRequest) error
+	grpc.ServerStream
+}
+
+type searchServiceGetCompanyReviewServer struct {
+	grpc.ServerStream
+}
+
+func (x *searchServiceGetCompanyReviewServer) Send(m *UserReviewRequest) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // SearchService_ServiceDesc is the grpc.ServiceDesc for SearchService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -136,7 +226,17 @@ var SearchService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetSearchHistory",
 			Handler:    _SearchService_GetSearchHistory_Handler,
 		},
+		{
+			MethodName: "UserAddReview",
+			Handler:    _SearchService_UserAddReview_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetCompanyReview",
+			Handler:       _SearchService_GetCompanyReview_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "search.proto",
 }

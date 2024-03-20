@@ -16,7 +16,18 @@ message UserId{
 message SearchResponse{
     string designation=1;
 }
+message UserReviewRequest{
+   string userId=1;
+   string username=2;
+   string companyId=3;
+   string description=4;
+}
+message ReviewByCompanyId{
+    string companyId=1;
+}
 service SearchService{
     rpc AddSearchHistory(SearchRequest)returns(google.protobuf.Empty);
     rpc GetSearchHistory(UserId)returns(SearchResponse);
+    rpc UserAddReview(UserReviewRequest)returns(google.protobuf.Empty);
+    rpc GetCompanyReview(ReviewByCompanyId)returns(stream UserReviewRequest){}
 }
