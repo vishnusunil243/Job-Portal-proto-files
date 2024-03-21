@@ -53,6 +53,8 @@ type CompanyServiceClient interface {
 	GetAllNotifyMe(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error)
 	CancelNotify(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateAverageRatingOfCompany(ctx context.Context, in *UpdateRatingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllCompany(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (CompanyService_GetAllCompanyClient, error)
+	GetCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*GetCompanyResponse, error)
 }
 
 type companyServiceClient struct {
@@ -494,6 +496,47 @@ func (c *companyServiceClient) UpdateAverageRatingOfCompany(ctx context.Context,
 	return out, nil
 }
 
+func (c *companyServiceClient) GetAllCompany(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (CompanyService_GetAllCompanyClient, error) {
+	stream, err := c.cc.NewStream(ctx, &CompanyService_ServiceDesc.Streams[7], "/user.CompanyService/GetAllCompany", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &companyServiceGetAllCompanyClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type CompanyService_GetAllCompanyClient interface {
+	Recv() (*CompanyResponse, error)
+	grpc.ClientStream
+}
+
+type companyServiceGetAllCompanyClient struct {
+	grpc.ClientStream
+}
+
+func (x *companyServiceGetAllCompanyClient) Recv() (*CompanyResponse, error) {
+	m := new(CompanyResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *companyServiceClient) GetCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*GetCompanyResponse, error) {
+	out := new(GetCompanyResponse)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/GetCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -528,6 +571,8 @@ type CompanyServiceServer interface {
 	GetAllNotifyMe(*GetHomeRequest, CompanyService_GetAllNotifyMeServer) error
 	CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
 	UpdateAverageRatingOfCompany(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error)
+	GetAllCompany(*emptypb.Empty, CompanyService_GetAllCompanyServer) error
+	GetCompany(context.Context, *GetJobByCompanyId) (*GetCompanyResponse, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -624,6 +669,12 @@ func (UnimplementedCompanyServiceServer) CancelNotify(context.Context, *NotifyMe
 }
 func (UnimplementedCompanyServiceServer) UpdateAverageRatingOfCompany(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAverageRatingOfCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetAllCompany(*emptypb.Empty, CompanyService_GetAllCompanyServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetCompany(context.Context, *GetJobByCompanyId) (*GetCompanyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompany not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -1199,6 +1250,45 @@ func _CompanyService_UpdateAverageRatingOfCompany_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_GetAllCompany_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CompanyServiceServer).GetAllCompany(m, &companyServiceGetAllCompanyServer{stream})
+}
+
+type CompanyService_GetAllCompanyServer interface {
+	Send(*CompanyResponse) error
+	grpc.ServerStream
+}
+
+type companyServiceGetAllCompanyServer struct {
+	grpc.ServerStream
+}
+
+func (x *companyServiceGetAllCompanyServer) Send(m *CompanyResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _CompanyService_GetCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobByCompanyId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/GetCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetCompany(ctx, req.(*GetJobByCompanyId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1298,6 +1388,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateAverageRatingOfCompany",
 			Handler:    _CompanyService_UpdateAverageRatingOfCompany_Handler,
 		},
+		{
+			MethodName: "GetCompany",
+			Handler:    _CompanyService_GetCompany_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1333,6 +1427,11 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetAllNotifyMe",
 			Handler:       _CompanyService_GetAllNotifyMe_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllCompany",
+			Handler:       _CompanyService_GetAllCompany_Handler,
 			ServerStreams: true,
 		},
 	},

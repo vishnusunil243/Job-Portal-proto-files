@@ -153,6 +153,24 @@ message UpdateRatingRequest{
     string companyId=1;
     float avgRating=2;
 }
+message CompanyResponse{
+    string Id=1;
+    string name=2;
+    string email=3;
+    string phone=4;
+    string avgRating=5;
+}
+message GetCompanyResponse{
+    string Id=1;
+    string name=2;
+    string email=3;
+    string phone=4;
+    string avgRating=5;
+    string category=6;
+    CompanyAddressResponse address=7;
+    repeated CompanyLinkResponse Links=8;
+    repeated JobResponse jobs=9;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -185,4 +203,6 @@ service CompanyService {
     rpc GetAllNotifyMe(GetHomeRequest)returns(stream NotifyMeResponse);
     rpc CancelNotify(NotifyMeRequest)returns(google.protobuf.Empty);
     rpc UpdateAverageRatingOfCompany(UpdateRatingRequest)returns(google.protobuf.Empty);
+    rpc GetAllCompany(google.protobuf.Empty)returns(stream CompanyResponse){}
+    rpc GetCompany(GetJobByCompanyId)returns(GetCompanyResponse);
 }
