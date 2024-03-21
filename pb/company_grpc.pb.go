@@ -55,6 +55,8 @@ type CompanyServiceClient interface {
 	UpdateAverageRatingOfCompany(ctx context.Context, in *UpdateRatingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllCompany(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (CompanyService_GetAllCompanyClient, error)
 	GetCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*GetCompanyResponse, error)
+	BlockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UnblockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type companyServiceClient struct {
@@ -537,6 +539,24 @@ func (c *companyServiceClient) GetCompany(ctx context.Context, in *GetJobByCompa
 	return out, nil
 }
 
+func (c *companyServiceClient) BlockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/BlockCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *companyServiceClient) UnblockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/UnblockCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -573,6 +593,8 @@ type CompanyServiceServer interface {
 	UpdateAverageRatingOfCompany(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error)
 	GetAllCompany(*emptypb.Empty, CompanyService_GetAllCompanyServer) error
 	GetCompany(context.Context, *GetJobByCompanyId) (*GetCompanyResponse, error)
+	BlockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
+	UnblockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -675,6 +697,12 @@ func (UnimplementedCompanyServiceServer) GetAllCompany(*emptypb.Empty, CompanySe
 }
 func (UnimplementedCompanyServiceServer) GetCompany(context.Context, *GetJobByCompanyId) (*GetCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) BlockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlockCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) UnblockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnblockCompany not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -1289,6 +1317,42 @@ func _CompanyService_GetCompany_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_BlockCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobByCompanyId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).BlockCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/BlockCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).BlockCompany(ctx, req.(*GetJobByCompanyId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompanyService_UnblockCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobByCompanyId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).UnblockCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/UnblockCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).UnblockCompany(ctx, req.(*GetJobByCompanyId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1391,6 +1455,14 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompany",
 			Handler:    _CompanyService_GetCompany_Handler,
+		},
+		{
+			MethodName: "BlockCompany",
+			Handler:    _CompanyService_BlockCompany_Handler,
+		},
+		{
+			MethodName: "UnblockCompany",
+			Handler:    _CompanyService_UnblockCompany_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
