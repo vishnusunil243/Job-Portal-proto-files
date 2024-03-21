@@ -58,7 +58,7 @@ type UserServiceClient interface {
 	AddToShortlist(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetShortlist(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetShortlistClient, error)
 	AddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	EditEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	EditEducation(ctx context.Context, in *EducationResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetEducationClient, error)
 }
 
@@ -546,7 +546,7 @@ func (c *userServiceClient) AddEducation(ctx context.Context, in *EducationReque
 	return out, nil
 }
 
-func (c *userServiceClient) EditEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userServiceClient) EditEducation(ctx context.Context, in *EducationResponse, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/EditEducation", in, out, opts...)
 	if err != nil {
@@ -626,7 +626,7 @@ type UserServiceServer interface {
 	AddToShortlist(context.Context, *AddToShortListRequest) (*emptypb.Empty, error)
 	GetShortlist(*JobIdRequest, UserService_GetShortlistServer) error
 	AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
-	EditEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
+	EditEducation(context.Context, *EducationResponse) (*emptypb.Empty, error)
 	GetEducation(*GetUserById, UserService_GetEducationServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -740,7 +740,7 @@ func (UnimplementedUserServiceServer) GetShortlist(*JobIdRequest, UserService_Ge
 func (UnimplementedUserServiceServer) AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddEducation not implemented")
 }
-func (UnimplementedUserServiceServer) EditEducation(context.Context, *EducationRequest) (*emptypb.Empty, error) {
+func (UnimplementedUserServiceServer) EditEducation(context.Context, *EducationResponse) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditEducation not implemented")
 }
 func (UnimplementedUserServiceServer) GetEducation(*GetUserById, UserService_GetEducationServer) error {
@@ -1411,7 +1411,7 @@ func _UserService_AddEducation_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _UserService_EditEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EducationRequest)
+	in := new(EducationResponse)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1423,7 +1423,7 @@ func _UserService_EditEducation_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/user.UserService/EditEducation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).EditEducation(ctx, req.(*EducationRequest))
+		return srv.(UserServiceServer).EditEducation(ctx, req.(*EducationResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }
