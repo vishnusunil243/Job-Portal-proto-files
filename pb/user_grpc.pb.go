@@ -57,6 +57,7 @@ type UserServiceClient interface {
 	AddExperience(ctx context.Context, in *AddExperienceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddToShortlist(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetShortlist(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetShortlistClient, error)
+	AddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -534,6 +535,15 @@ func (x *userServiceGetShortlistClient) Recv() (*GetUserResponse, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) AddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddEducation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -572,6 +582,7 @@ type UserServiceServer interface {
 	AddExperience(context.Context, *AddExperienceRequest) (*emptypb.Empty, error)
 	AddToShortlist(context.Context, *AddToShortListRequest) (*emptypb.Empty, error)
 	GetShortlist(*JobIdRequest, UserService_GetShortlistServer) error
+	AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -680,6 +691,9 @@ func (UnimplementedUserServiceServer) AddToShortlist(context.Context, *AddToShor
 }
 func (UnimplementedUserServiceServer) GetShortlist(*JobIdRequest, UserService_GetShortlistServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetShortlist not implemented")
+}
+func (UnimplementedUserServiceServer) AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEducation not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1327,6 +1341,24 @@ func (x *userServiceGetShortlistServer) Send(m *GetUserResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_AddEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EducationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddEducation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddEducation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddEducation(ctx, req.(*EducationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1441,6 +1473,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddToShortlist",
 			Handler:    _UserService_AddToShortlist_Handler,
+		},
+		{
+			MethodName: "AddEducation",
+			Handler:    _UserService_AddEducation_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
