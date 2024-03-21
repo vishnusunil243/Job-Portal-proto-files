@@ -58,6 +58,8 @@ type UserServiceClient interface {
 	AddToShortlist(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetShortlist(ctx context.Context, in *JobIdRequest, opts ...grpc.CallOption) (UserService_GetShortlistClient, error)
 	AddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	EditEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetEducationClient, error)
 }
 
 type userServiceClient struct {
@@ -544,6 +546,47 @@ func (c *userServiceClient) AddEducation(ctx context.Context, in *EducationReque
 	return out, nil
 }
 
+func (c *userServiceClient) EditEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/EditEducation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetEducationClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[7], "/user.UserService/GetEducation", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetEducationClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetEducationClient interface {
+	Recv() (*EducationResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetEducationClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetEducationClient) Recv() (*EducationResponse, error) {
+	m := new(EducationResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -583,6 +626,8 @@ type UserServiceServer interface {
 	AddToShortlist(context.Context, *AddToShortListRequest) (*emptypb.Empty, error)
 	GetShortlist(*JobIdRequest, UserService_GetShortlistServer) error
 	AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
+	EditEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
+	GetEducation(*GetUserById, UserService_GetEducationServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -694,6 +739,12 @@ func (UnimplementedUserServiceServer) GetShortlist(*JobIdRequest, UserService_Ge
 }
 func (UnimplementedUserServiceServer) AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddEducation not implemented")
+}
+func (UnimplementedUserServiceServer) EditEducation(context.Context, *EducationRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditEducation not implemented")
+}
+func (UnimplementedUserServiceServer) GetEducation(*GetUserById, UserService_GetEducationServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetEducation not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1359,6 +1410,45 @@ func _UserService_AddEducation_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_EditEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EducationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).EditEducation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/EditEducation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).EditEducation(ctx, req.(*EducationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetEducation_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetEducation(m, &userServiceGetEducationServer{stream})
+}
+
+type UserService_GetEducationServer interface {
+	Send(*EducationResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetEducationServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetEducationServer) Send(m *EducationResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1478,6 +1568,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "AddEducation",
 			Handler:    _UserService_AddEducation_Handler,
 		},
+		{
+			MethodName: "EditEducation",
+			Handler:    _UserService_EditEducation_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1513,6 +1607,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetShortlist",
 			Handler:       _UserService_GetShortlist_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetEducation",
+			Handler:       _UserService_GetEducation_Handler,
 			ServerStreams: true,
 		},
 	},

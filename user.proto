@@ -129,6 +129,14 @@ message EducationRequest{
     string startDate=4;
     string endDate=5;
 }
+message EducationResponse{
+    string Id=1;
+    string degree=2;
+    string institution=3;
+    string userId=4;
+    string startDate=5;
+    string endDate=6;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -166,4 +174,6 @@ service UserService{
     rpc AddToShortlist(AddToShortListRequest)returns(google.protobuf.Empty);
     rpc GetShortlist(JobIdRequest)returns(stream GetUserResponse){}
     rpc AddEducation(EducationRequest)returns(google.protobuf.Empty);
+    rpc EditEducation(EducationRequest)returns(google.protobuf.Empty);
+    rpc GetEducation(GetUserById)returns(stream EducationResponse){}
 }
