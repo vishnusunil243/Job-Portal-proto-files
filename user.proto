@@ -176,4 +176,6 @@ service UserService{
     rpc AddEducation(EducationRequest)returns(google.protobuf.Empty);
     rpc EditEducation(EducationResponse)returns(google.protobuf.Empty);
     rpc GetEducation(GetUserById)returns(stream EducationResponse){}
+    rpc BlockUser(GetUserById)returns(google.protobuf.Empty);
+    rpc UnblockUser(GetUserById)returns(google.protobuf.Empty);
 }
