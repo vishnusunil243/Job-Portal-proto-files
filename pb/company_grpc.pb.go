@@ -52,6 +52,7 @@ type CompanyServiceClient interface {
 	NotifyMe(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllNotifyMe(ctx context.Context, in *GetHomeRequest, opts ...grpc.CallOption) (CompanyService_GetAllNotifyMeClient, error)
 	CancelNotify(ctx context.Context, in *NotifyMeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateAverageRatingOfCompany(ctx context.Context, in *UpdateRatingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type companyServiceClient struct {
@@ -484,6 +485,15 @@ func (c *companyServiceClient) CancelNotify(ctx context.Context, in *NotifyMeReq
 	return out, nil
 }
 
+func (c *companyServiceClient) UpdateAverageRatingOfCompany(ctx context.Context, in *UpdateRatingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/UpdateAverageRatingOfCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -517,6 +527,7 @@ type CompanyServiceServer interface {
 	NotifyMe(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
 	GetAllNotifyMe(*GetHomeRequest, CompanyService_GetAllNotifyMeServer) error
 	CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error)
+	UpdateAverageRatingOfCompany(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -610,6 +621,9 @@ func (UnimplementedCompanyServiceServer) GetAllNotifyMe(*GetHomeRequest, Company
 }
 func (UnimplementedCompanyServiceServer) CancelNotify(context.Context, *NotifyMeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelNotify not implemented")
+}
+func (UnimplementedCompanyServiceServer) UpdateAverageRatingOfCompany(context.Context, *UpdateRatingRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAverageRatingOfCompany not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -1167,6 +1181,24 @@ func _CompanyService_CancelNotify_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_UpdateAverageRatingOfCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRatingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).UpdateAverageRatingOfCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/UpdateAverageRatingOfCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).UpdateAverageRatingOfCompany(ctx, req.(*UpdateRatingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1261,6 +1293,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CancelNotify",
 			Handler:    _CompanyService_CancelNotify_Handler,
+		},
+		{
+			MethodName: "UpdateAverageRatingOfCompany",
+			Handler:    _CompanyService_UpdateAverageRatingOfCompany_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

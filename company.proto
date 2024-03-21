@@ -149,6 +149,10 @@ message NotifyMeResponse{
 message GetHomeRequest{
     string userId=1;
 }
+message UpdateRatingRequest{
+    string companyId=1;
+    float avgRating=2;
+}
 service CompanyService {
     rpc CompanySignup(CompanySignupRequest) returns (CompanySignupResponse);
     rpc CompanyLogin(CompanyLoginRequest) returns (CompanySignupResponse);
@@ -180,4 +184,5 @@ service CompanyService {
     rpc NotifyMe(NotifyMeRequest)returns(google.protobuf.Empty);
     rpc GetAllNotifyMe(GetHomeRequest)returns(stream NotifyMeResponse);
     rpc CancelNotify(NotifyMeRequest)returns(google.protobuf.Empty);
+    rpc UpdateAverageRatingOfCompany(UpdateRatingRequest)returns(google.protobuf.Empty);
 }
