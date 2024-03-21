@@ -60,6 +60,7 @@ type UserServiceClient interface {
 	AddEducation(ctx context.Context, in *EducationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditEducation(ctx context.Context, in *EducationResponse, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetEducation(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetEducationClient, error)
+	RemoveEducation(ctx context.Context, in *EducationById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BlockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnblockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -589,6 +590,15 @@ func (x *userServiceGetEducationClient) Recv() (*EducationResponse, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) RemoveEducation(ctx context.Context, in *EducationById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/RemoveEducation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) BlockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.UserService/BlockUser", in, out, opts...)
@@ -648,6 +658,7 @@ type UserServiceServer interface {
 	AddEducation(context.Context, *EducationRequest) (*emptypb.Empty, error)
 	EditEducation(context.Context, *EducationResponse) (*emptypb.Empty, error)
 	GetEducation(*GetUserById, UserService_GetEducationServer) error
+	RemoveEducation(context.Context, *EducationById) (*emptypb.Empty, error)
 	BlockUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	UnblockUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -767,6 +778,9 @@ func (UnimplementedUserServiceServer) EditEducation(context.Context, *EducationR
 }
 func (UnimplementedUserServiceServer) GetEducation(*GetUserById, UserService_GetEducationServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetEducation not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveEducation(context.Context, *EducationById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveEducation not implemented")
 }
 func (UnimplementedUserServiceServer) BlockUser(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlockUser not implemented")
@@ -1477,6 +1491,24 @@ func (x *userServiceGetEducationServer) Send(m *EducationResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_RemoveEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EducationById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveEducation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/RemoveEducation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveEducation(ctx, req.(*EducationById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_BlockUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserById)
 	if err := dec(in); err != nil {
@@ -1635,6 +1667,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditEducation",
 			Handler:    _UserService_EditEducation_Handler,
+		},
+		{
+			MethodName: "RemoveEducation",
+			Handler:    _UserService_RemoveEducation_Handler,
 		},
 		{
 			MethodName: "BlockUser",

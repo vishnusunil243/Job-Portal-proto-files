@@ -137,6 +137,9 @@ message EducationResponse{
     string startDate=5;
     string endDate=6;
 }
+message EducationById{
+    string educationId=1;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -176,6 +179,7 @@ service UserService{
     rpc AddEducation(EducationRequest)returns(google.protobuf.Empty);
     rpc EditEducation(EducationResponse)returns(google.protobuf.Empty);
     rpc GetEducation(GetUserById)returns(stream EducationResponse){}
+    rpc RemoveEducation(EducationById)returns(google.protobuf.Empty);
     rpc BlockUser(GetUserById)returns(google.protobuf.Empty);
     rpc UnblockUser(GetUserById)returns(google.protobuf.Empty);
 }
