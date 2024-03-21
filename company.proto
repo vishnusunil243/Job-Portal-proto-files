@@ -158,7 +158,7 @@ message CompanyResponse{
     string name=2;
     string email=3;
     string phone=4;
-    string avgRating=5;
+    float avgRating=5;
 }
 message GetCompanyResponse{
     string Id=1;
