@@ -201,4 +201,5 @@ service UserService{
     rpc UnblockUser(GetUserById)returns(google.protobuf.Empty);
     rpc InterviewScheduleForUser(InterviewScheduleRequest)returns(google.protobuf.Empty);
     rpc GetInterviewsForUser(GetUserById)returns(stream InterviewResponse){}
+    rpc ReportUser(GetUserById)returns(google.protobuf.Empty);
 }
