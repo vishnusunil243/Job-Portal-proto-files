@@ -140,6 +140,10 @@ message EducationResponse{
 message EducationById{
     string educationId=1;
 }
+message InterviewScheduleRequest{
+    string date=1;
+    string userId=2;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -182,4 +186,5 @@ service UserService{
     rpc RemoveEducation(EducationById)returns(google.protobuf.Empty);
     rpc BlockUser(GetUserById)returns(google.protobuf.Empty);
     rpc UnblockUser(GetUserById)returns(google.protobuf.Empty);
+    rpc InterviewScheduleForUser(InterviewScheduleRequest)returns(google.protobuf.Empty);
 }

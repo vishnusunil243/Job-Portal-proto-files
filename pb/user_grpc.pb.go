@@ -63,6 +63,7 @@ type UserServiceClient interface {
 	RemoveEducation(ctx context.Context, in *EducationById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	BlockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnblockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	InterviewScheduleForUser(ctx context.Context, in *InterviewScheduleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -617,6 +618,15 @@ func (c *userServiceClient) UnblockUser(ctx context.Context, in *GetUserById, op
 	return out, nil
 }
 
+func (c *userServiceClient) InterviewScheduleForUser(ctx context.Context, in *InterviewScheduleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/InterviewScheduleForUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -661,6 +671,7 @@ type UserServiceServer interface {
 	RemoveEducation(context.Context, *EducationById) (*emptypb.Empty, error)
 	BlockUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	UnblockUser(context.Context, *GetUserById) (*emptypb.Empty, error)
+	InterviewScheduleForUser(context.Context, *InterviewScheduleRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -787,6 +798,9 @@ func (UnimplementedUserServiceServer) BlockUser(context.Context, *GetUserById) (
 }
 func (UnimplementedUserServiceServer) UnblockUser(context.Context, *GetUserById) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnblockUser not implemented")
+}
+func (UnimplementedUserServiceServer) InterviewScheduleForUser(context.Context, *InterviewScheduleRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InterviewScheduleForUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1545,6 +1559,24 @@ func _UserService_UnblockUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_InterviewScheduleForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InterviewScheduleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).InterviewScheduleForUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/InterviewScheduleForUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).InterviewScheduleForUser(ctx, req.(*InterviewScheduleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1679,6 +1711,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnblockUser",
 			Handler:    _UserService_UnblockUser_Handler,
+		},
+		{
+			MethodName: "InterviewScheduleForUser",
+			Handler:    _UserService_InterviewScheduleForUser_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
