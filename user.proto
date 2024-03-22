@@ -151,6 +151,12 @@ message AppliedJobResponse{
     string company=3;
     string status=4;
 }
+message InterviewResponse{
+    string jobId=1;
+    string designation=2;
+    string company=3;
+    string date=4;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -194,5 +200,5 @@ service UserService{
     rpc BlockUser(GetUserById)returns(google.protobuf.Empty);
     rpc UnblockUser(GetUserById)returns(google.protobuf.Empty);
     rpc InterviewScheduleForUser(InterviewScheduleRequest)returns(google.protobuf.Empty);
-    rpc GetInterviewsForUser(GetUserById)returns(stream AppliedJobResponse){}
+    rpc GetInterviewsForUser(GetUserById)returns(stream InterviewResponse){}
 }

@@ -644,7 +644,7 @@ func (c *userServiceClient) GetInterviewsForUser(ctx context.Context, in *GetUse
 }
 
 type UserService_GetInterviewsForUserClient interface {
-	Recv() (*AppliedJobResponse, error)
+	Recv() (*InterviewResponse, error)
 	grpc.ClientStream
 }
 
@@ -652,8 +652,8 @@ type userServiceGetInterviewsForUserClient struct {
 	grpc.ClientStream
 }
 
-func (x *userServiceGetInterviewsForUserClient) Recv() (*AppliedJobResponse, error) {
-	m := new(AppliedJobResponse)
+func (x *userServiceGetInterviewsForUserClient) Recv() (*InterviewResponse, error) {
+	m := new(InterviewResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -1623,7 +1623,7 @@ func _UserService_GetInterviewsForUser_Handler(srv interface{}, stream grpc.Serv
 }
 
 type UserService_GetInterviewsForUserServer interface {
-	Send(*AppliedJobResponse) error
+	Send(*InterviewResponse) error
 	grpc.ServerStream
 }
 
@@ -1631,7 +1631,7 @@ type userServiceGetInterviewsForUserServer struct {
 	grpc.ServerStream
 }
 
-func (x *userServiceGetInterviewsForUserServer) Send(m *AppliedJobResponse) error {
+func (x *userServiceGetInterviewsForUserServer) Send(m *InterviewResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
