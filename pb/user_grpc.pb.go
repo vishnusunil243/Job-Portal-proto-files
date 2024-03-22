@@ -443,7 +443,7 @@ func (c *userServiceClient) UserAppliedJobs(ctx context.Context, in *GetUserById
 }
 
 type UserService_UserAppliedJobsClient interface {
-	Recv() (*JobApplyRequest, error)
+	Recv() (*AppliedJobResponse, error)
 	grpc.ClientStream
 }
 
@@ -451,8 +451,8 @@ type userServiceUserAppliedJobsClient struct {
 	grpc.ClientStream
 }
 
-func (x *userServiceUserAppliedJobsClient) Recv() (*JobApplyRequest, error) {
-	m := new(JobApplyRequest)
+func (x *userServiceUserAppliedJobsClient) Recv() (*AppliedJobResponse, error) {
+	m := new(AppliedJobResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -1358,7 +1358,7 @@ func _UserService_UserAppliedJobs_Handler(srv interface{}, stream grpc.ServerStr
 }
 
 type UserService_UserAppliedJobsServer interface {
-	Send(*JobApplyRequest) error
+	Send(*AppliedJobResponse) error
 	grpc.ServerStream
 }
 
@@ -1366,7 +1366,7 @@ type userServiceUserAppliedJobsServer struct {
 	grpc.ServerStream
 }
 
-func (x *userServiceUserAppliedJobsServer) Send(m *JobApplyRequest) error {
+func (x *userServiceUserAppliedJobsServer) Send(m *AppliedJobResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 

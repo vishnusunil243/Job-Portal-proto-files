@@ -145,6 +145,12 @@ message InterviewScheduleRequest{
     string userId=2;
     string jobId=3;
 }
+message AppliedJobResponse{
+    string jobId=1;
+    string designation=2;
+    string company=3;
+    string status=4;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -176,7 +182,7 @@ service UserService{
     rpc UserGetAddress(GetUserById)returns(AddressResponse);
     rpc UserUploadProfileImage(UserImageRequest)returns(UserImageResponse);
     rpc UserGetProfilePic(GetUserById)returns(UserImageResponse);
-    rpc UserAppliedJobs(GetUserById)returns(stream JobApplyRequest){}
+    rpc UserAppliedJobs(GetUserById)returns(stream AppliedJobResponse){}
     rpc GetAppliedUsersByJobId(JobIdRequest)returns(stream GetUserResponse){}
     rpc AddExperience(AddExperienceRequest)returns(google.protobuf.Empty);
     rpc AddToShortlist(AddToShortListRequest)returns(google.protobuf.Empty);
