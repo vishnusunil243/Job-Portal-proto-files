@@ -194,4 +194,5 @@ service UserService{
     rpc BlockUser(GetUserById)returns(google.protobuf.Empty);
     rpc UnblockUser(GetUserById)returns(google.protobuf.Empty);
     rpc InterviewScheduleForUser(InterviewScheduleRequest)returns(google.protobuf.Empty);
+    rpc GetInterviewsForUser(GetUserById)returns(stream AppliedJobResponse){}
 }

@@ -64,6 +64,7 @@ type UserServiceClient interface {
 	BlockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnblockUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	InterviewScheduleForUser(ctx context.Context, in *InterviewScheduleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetInterviewsForUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetInterviewsForUserClient, error)
 }
 
 type userServiceClient struct {
@@ -627,6 +628,38 @@ func (c *userServiceClient) InterviewScheduleForUser(ctx context.Context, in *In
 	return out, nil
 }
 
+func (c *userServiceClient) GetInterviewsForUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetInterviewsForUserClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[8], "/user.UserService/GetInterviewsForUser", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetInterviewsForUserClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetInterviewsForUserClient interface {
+	Recv() (*AppliedJobResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetInterviewsForUserClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetInterviewsForUserClient) Recv() (*AppliedJobResponse, error) {
+	m := new(AppliedJobResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -672,6 +705,7 @@ type UserServiceServer interface {
 	BlockUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	UnblockUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	InterviewScheduleForUser(context.Context, *InterviewScheduleRequest) (*emptypb.Empty, error)
+	GetInterviewsForUser(*GetUserById, UserService_GetInterviewsForUserServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -801,6 +835,9 @@ func (UnimplementedUserServiceServer) UnblockUser(context.Context, *GetUserById)
 }
 func (UnimplementedUserServiceServer) InterviewScheduleForUser(context.Context, *InterviewScheduleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InterviewScheduleForUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetInterviewsForUser(*GetUserById, UserService_GetInterviewsForUserServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetInterviewsForUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1577,6 +1614,27 @@ func _UserService_InterviewScheduleForUser_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetInterviewsForUser_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetInterviewsForUser(m, &userServiceGetInterviewsForUserServer{stream})
+}
+
+type UserService_GetInterviewsForUserServer interface {
+	Send(*AppliedJobResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetInterviewsForUserServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetInterviewsForUserServer) Send(m *AppliedJobResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1756,6 +1814,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetEducation",
 			Handler:       _UserService_GetEducation_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetInterviewsForUser",
+			Handler:       _UserService_GetInterviewsForUser_Handler,
 			ServerStreams: true,
 		},
 	},
