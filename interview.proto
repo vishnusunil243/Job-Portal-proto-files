@@ -18,8 +18,12 @@ message GetInterviewRequest{
 message UserInterviewReq{
     string userId=1;
 }
+message JobInterviewRequest{
+    string jobId=1;
+}
 service InterviewService{
     rpc AddInterview(AddInterviewRequest)returns(google.protobuf.Empty);
     rpc GetInterview(GetInterviewRequest)returns(AddInterviewRequest);
-    rpc GetAllInterviews(UserInterviewReq)returns(stream AddInterviewRequest){}
+    rpc GetAllInterviewsUser(UserInterviewReq)returns(stream AddInterviewRequest){}
+    rpc GetAllInterviewsJobs(JobInterviewRequest)returns(stream AddInterviewRequest){}
 }

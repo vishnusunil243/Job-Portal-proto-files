@@ -25,7 +25,8 @@ const _ = grpc.SupportPackageIsVersion7
 type InterviewServiceClient interface {
 	AddInterview(ctx context.Context, in *AddInterviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetInterview(ctx context.Context, in *GetInterviewRequest, opts ...grpc.CallOption) (*AddInterviewRequest, error)
-	GetAllInterviews(ctx context.Context, in *UserInterviewReq, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsClient, error)
+	GetAllInterviewsUser(ctx context.Context, in *UserInterviewReq, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsUserClient, error)
+	GetAllInterviewsJobs(ctx context.Context, in *JobInterviewRequest, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsJobsClient, error)
 }
 
 type interviewServiceClient struct {
@@ -54,12 +55,12 @@ func (c *interviewServiceClient) GetInterview(ctx context.Context, in *GetInterv
 	return out, nil
 }
 
-func (c *interviewServiceClient) GetAllInterviews(ctx context.Context, in *UserInterviewReq, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &InterviewService_ServiceDesc.Streams[0], "/user.InterviewService/GetAllInterviews", opts...)
+func (c *interviewServiceClient) GetAllInterviewsUser(ctx context.Context, in *UserInterviewReq, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsUserClient, error) {
+	stream, err := c.cc.NewStream(ctx, &InterviewService_ServiceDesc.Streams[0], "/user.InterviewService/GetAllInterviewsUser", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &interviewServiceGetAllInterviewsClient{stream}
+	x := &interviewServiceGetAllInterviewsUserClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -69,16 +70,48 @@ func (c *interviewServiceClient) GetAllInterviews(ctx context.Context, in *UserI
 	return x, nil
 }
 
-type InterviewService_GetAllInterviewsClient interface {
+type InterviewService_GetAllInterviewsUserClient interface {
 	Recv() (*AddInterviewRequest, error)
 	grpc.ClientStream
 }
 
-type interviewServiceGetAllInterviewsClient struct {
+type interviewServiceGetAllInterviewsUserClient struct {
 	grpc.ClientStream
 }
 
-func (x *interviewServiceGetAllInterviewsClient) Recv() (*AddInterviewRequest, error) {
+func (x *interviewServiceGetAllInterviewsUserClient) Recv() (*AddInterviewRequest, error) {
+	m := new(AddInterviewRequest)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *interviewServiceClient) GetAllInterviewsJobs(ctx context.Context, in *JobInterviewRequest, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsJobsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &InterviewService_ServiceDesc.Streams[1], "/user.InterviewService/GetAllInterviewsJobs", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &interviewServiceGetAllInterviewsJobsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type InterviewService_GetAllInterviewsJobsClient interface {
+	Recv() (*AddInterviewRequest, error)
+	grpc.ClientStream
+}
+
+type interviewServiceGetAllInterviewsJobsClient struct {
+	grpc.ClientStream
+}
+
+func (x *interviewServiceGetAllInterviewsJobsClient) Recv() (*AddInterviewRequest, error) {
 	m := new(AddInterviewRequest)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -92,7 +125,8 @@ func (x *interviewServiceGetAllInterviewsClient) Recv() (*AddInterviewRequest, e
 type InterviewServiceServer interface {
 	AddInterview(context.Context, *AddInterviewRequest) (*emptypb.Empty, error)
 	GetInterview(context.Context, *GetInterviewRequest) (*AddInterviewRequest, error)
-	GetAllInterviews(*UserInterviewReq, InterviewService_GetAllInterviewsServer) error
+	GetAllInterviewsUser(*UserInterviewReq, InterviewService_GetAllInterviewsUserServer) error
+	GetAllInterviewsJobs(*JobInterviewRequest, InterviewService_GetAllInterviewsJobsServer) error
 	mustEmbedUnimplementedInterviewServiceServer()
 }
 
@@ -106,8 +140,11 @@ func (UnimplementedInterviewServiceServer) AddInterview(context.Context, *AddInt
 func (UnimplementedInterviewServiceServer) GetInterview(context.Context, *GetInterviewRequest) (*AddInterviewRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetInterview not implemented")
 }
-func (UnimplementedInterviewServiceServer) GetAllInterviews(*UserInterviewReq, InterviewService_GetAllInterviewsServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetAllInterviews not implemented")
+func (UnimplementedInterviewServiceServer) GetAllInterviewsUser(*UserInterviewReq, InterviewService_GetAllInterviewsUserServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllInterviewsUser not implemented")
+}
+func (UnimplementedInterviewServiceServer) GetAllInterviewsJobs(*JobInterviewRequest, InterviewService_GetAllInterviewsJobsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllInterviewsJobs not implemented")
 }
 func (UnimplementedInterviewServiceServer) mustEmbedUnimplementedInterviewServiceServer() {}
 
@@ -158,24 +195,45 @@ func _InterviewService_GetInterview_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InterviewService_GetAllInterviews_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _InterviewService_GetAllInterviewsUser_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(UserInterviewReq)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(InterviewServiceServer).GetAllInterviews(m, &interviewServiceGetAllInterviewsServer{stream})
+	return srv.(InterviewServiceServer).GetAllInterviewsUser(m, &interviewServiceGetAllInterviewsUserServer{stream})
 }
 
-type InterviewService_GetAllInterviewsServer interface {
+type InterviewService_GetAllInterviewsUserServer interface {
 	Send(*AddInterviewRequest) error
 	grpc.ServerStream
 }
 
-type interviewServiceGetAllInterviewsServer struct {
+type interviewServiceGetAllInterviewsUserServer struct {
 	grpc.ServerStream
 }
 
-func (x *interviewServiceGetAllInterviewsServer) Send(m *AddInterviewRequest) error {
+func (x *interviewServiceGetAllInterviewsUserServer) Send(m *AddInterviewRequest) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _InterviewService_GetAllInterviewsJobs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(JobInterviewRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(InterviewServiceServer).GetAllInterviewsJobs(m, &interviewServiceGetAllInterviewsJobsServer{stream})
+}
+
+type InterviewService_GetAllInterviewsJobsServer interface {
+	Send(*AddInterviewRequest) error
+	grpc.ServerStream
+}
+
+type interviewServiceGetAllInterviewsJobsServer struct {
+	grpc.ServerStream
+}
+
+func (x *interviewServiceGetAllInterviewsJobsServer) Send(m *AddInterviewRequest) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -197,8 +255,13 @@ var InterviewService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "GetAllInterviews",
-			Handler:       _InterviewService_GetAllInterviews_Handler,
+			StreamName:    "GetAllInterviewsUser",
+			Handler:       _InterviewService_GetAllInterviewsUser_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllInterviewsJobs",
+			Handler:       _InterviewService_GetAllInterviewsJobs_Handler,
 			ServerStreams: true,
 		},
 	},
