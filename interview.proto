@@ -9,7 +9,17 @@ import "google/protobuf/empty.proto";
 message AddInterviewRequest{
     string userId=1;
     string roomId=2;
+    string jobId=3;
+}
+message GetInterviewRequest{
+    string userId=1;
+    string jobId=2;
+}
+message UserInterviewReq{
+    string userId=1;
 }
 service InterviewService{
     rpc AddInterview(AddInterviewRequest)returns(google.protobuf.Empty);
+    rpc GetInterview(GetInterviewRequest)returns(AddInterviewRequest);
+    rpc GetAllInterviews(UserInterviewReq)returns(stream AddInterviewRequest){}
 }

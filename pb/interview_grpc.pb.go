@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type InterviewServiceClient interface {
 	AddInterview(ctx context.Context, in *AddInterviewRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetInterview(ctx context.Context, in *GetInterviewRequest, opts ...grpc.CallOption) (*AddInterviewRequest, error)
+	GetAllInterviews(ctx context.Context, in *UserInterviewReq, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsClient, error)
 }
 
 type interviewServiceClient struct {
@@ -43,11 +45,54 @@ func (c *interviewServiceClient) AddInterview(ctx context.Context, in *AddInterv
 	return out, nil
 }
 
+func (c *interviewServiceClient) GetInterview(ctx context.Context, in *GetInterviewRequest, opts ...grpc.CallOption) (*AddInterviewRequest, error) {
+	out := new(AddInterviewRequest)
+	err := c.cc.Invoke(ctx, "/user.InterviewService/GetInterview", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *interviewServiceClient) GetAllInterviews(ctx context.Context, in *UserInterviewReq, opts ...grpc.CallOption) (InterviewService_GetAllInterviewsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &InterviewService_ServiceDesc.Streams[0], "/user.InterviewService/GetAllInterviews", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &interviewServiceGetAllInterviewsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type InterviewService_GetAllInterviewsClient interface {
+	Recv() (*AddInterviewRequest, error)
+	grpc.ClientStream
+}
+
+type interviewServiceGetAllInterviewsClient struct {
+	grpc.ClientStream
+}
+
+func (x *interviewServiceGetAllInterviewsClient) Recv() (*AddInterviewRequest, error) {
+	m := new(AddInterviewRequest)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // InterviewServiceServer is the server API for InterviewService service.
 // All implementations must embed UnimplementedInterviewServiceServer
 // for forward compatibility
 type InterviewServiceServer interface {
 	AddInterview(context.Context, *AddInterviewRequest) (*emptypb.Empty, error)
+	GetInterview(context.Context, *GetInterviewRequest) (*AddInterviewRequest, error)
+	GetAllInterviews(*UserInterviewReq, InterviewService_GetAllInterviewsServer) error
 	mustEmbedUnimplementedInterviewServiceServer()
 }
 
@@ -57,6 +102,12 @@ type UnimplementedInterviewServiceServer struct {
 
 func (UnimplementedInterviewServiceServer) AddInterview(context.Context, *AddInterviewRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddInterview not implemented")
+}
+func (UnimplementedInterviewServiceServer) GetInterview(context.Context, *GetInterviewRequest) (*AddInterviewRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInterview not implemented")
+}
+func (UnimplementedInterviewServiceServer) GetAllInterviews(*UserInterviewReq, InterviewService_GetAllInterviewsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllInterviews not implemented")
 }
 func (UnimplementedInterviewServiceServer) mustEmbedUnimplementedInterviewServiceServer() {}
 
@@ -89,6 +140,45 @@ func _InterviewService_AddInterview_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _InterviewService_GetInterview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInterviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InterviewServiceServer).GetInterview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.InterviewService/GetInterview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InterviewServiceServer).GetInterview(ctx, req.(*GetInterviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InterviewService_GetAllInterviews_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(UserInterviewReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(InterviewServiceServer).GetAllInterviews(m, &interviewServiceGetAllInterviewsServer{stream})
+}
+
+type InterviewService_GetAllInterviewsServer interface {
+	Send(*AddInterviewRequest) error
+	grpc.ServerStream
+}
+
+type interviewServiceGetAllInterviewsServer struct {
+	grpc.ServerStream
+}
+
+func (x *interviewServiceGetAllInterviewsServer) Send(m *AddInterviewRequest) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // InterviewService_ServiceDesc is the grpc.ServiceDesc for InterviewService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,7 +190,17 @@ var InterviewService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "AddInterview",
 			Handler:    _InterviewService_AddInterview_Handler,
 		},
+		{
+			MethodName: "GetInterview",
+			Handler:    _InterviewService_GetInterview_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAllInterviews",
+			Handler:       _InterviewService_GetAllInterviews_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "interview.proto",
 }
