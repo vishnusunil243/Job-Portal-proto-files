@@ -1,0 +1,15 @@
+syntax="proto3";
+
+package user;
+
+option go_package="./pb";
+
+import "google/protobuf/empty.proto";
+
+message AddInterviewRequest{
+    string userId=1;
+    string roomId=2;
+}
+service InterviewService{
+    rpc AddInterview(AddInterviewRequest)returns(google.protobuf.Empty);
+}
