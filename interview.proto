@@ -26,4 +26,5 @@ service InterviewService{
     rpc GetInterview(GetInterviewRequest)returns(AddInterviewRequest);
     rpc GetAllInterviewsUser(UserInterviewReq)returns(stream AddInterviewRequest){}
     rpc GetAllInterviewsJobs(JobInterviewRequest)returns(stream AddInterviewRequest){}
+    rpc DeleteInterview(GetInterviewRequest)returns(google.protobuf.Empty);
 }
