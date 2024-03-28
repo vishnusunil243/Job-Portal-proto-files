@@ -156,6 +156,7 @@ message InterviewResponse{
     string designation=2;
     string company=3;
     string date=4;
+    string roomId=5;
 }
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
