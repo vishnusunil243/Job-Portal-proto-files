@@ -57,6 +57,7 @@ type CompanyServiceClient interface {
 	GetCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*GetCompanyResponse, error)
 	BlockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnblockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCompanyIdFromJobId(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*GetJobByCompanyId, error)
 }
 
 type companyServiceClient struct {
@@ -557,6 +558,15 @@ func (c *companyServiceClient) UnblockCompany(ctx context.Context, in *GetJobByC
 	return out, nil
 }
 
+func (c *companyServiceClient) GetCompanyIdFromJobId(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*GetJobByCompanyId, error) {
+	out := new(GetJobByCompanyId)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/GetCompanyIdFromJobId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -595,6 +605,7 @@ type CompanyServiceServer interface {
 	GetCompany(context.Context, *GetJobByCompanyId) (*GetCompanyResponse, error)
 	BlockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
 	UnblockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
+	GetCompanyIdFromJobId(context.Context, *GetJobById) (*GetJobByCompanyId, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -703,6 +714,9 @@ func (UnimplementedCompanyServiceServer) BlockCompany(context.Context, *GetJobBy
 }
 func (UnimplementedCompanyServiceServer) UnblockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnblockCompany not implemented")
+}
+func (UnimplementedCompanyServiceServer) GetCompanyIdFromJobId(context.Context, *GetJobById) (*GetJobByCompanyId, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyIdFromJobId not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -1353,6 +1367,24 @@ func _CompanyService_UnblockCompany_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_GetCompanyIdFromJobId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).GetCompanyIdFromJobId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/GetCompanyIdFromJobId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).GetCompanyIdFromJobId(ctx, req.(*GetJobById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1463,6 +1495,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnblockCompany",
 			Handler:    _CompanyService_UnblockCompany_Handler,
+		},
+		{
+			MethodName: "GetCompanyIdFromJobId",
+			Handler:    _CompanyService_GetCompanyIdFromJobId_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
