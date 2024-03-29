@@ -67,6 +67,7 @@ type UserServiceClient interface {
 	GetInterviewsForUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetInterviewsForUserClient, error)
 	ReportUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	HireUser(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateSubscription(ctx context.Context, in *UpdateSubscriptionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -680,6 +681,15 @@ func (c *userServiceClient) HireUser(ctx context.Context, in *AddToShortListRequ
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateSubscription(ctx context.Context, in *UpdateSubscriptionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/UpdateSubscription", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -728,6 +738,7 @@ type UserServiceServer interface {
 	GetInterviewsForUser(*GetUserById, UserService_GetInterviewsForUserServer) error
 	ReportUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	HireUser(context.Context, *AddToShortListRequest) (*emptypb.Empty, error)
+	UpdateSubscription(context.Context, *UpdateSubscriptionRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -866,6 +877,9 @@ func (UnimplementedUserServiceServer) ReportUser(context.Context, *GetUserById) 
 }
 func (UnimplementedUserServiceServer) HireUser(context.Context, *AddToShortListRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HireUser not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateSubscription(context.Context, *UpdateSubscriptionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSubscription not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1699,6 +1713,24 @@ func _UserService_HireUser_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSubscriptionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateSubscription(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UpdateSubscription",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateSubscription(ctx, req.(*UpdateSubscriptionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1845,6 +1877,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HireUser",
 			Handler:    _UserService_HireUser_Handler,
+		},
+		{
+			MethodName: "UpdateSubscription",
+			Handler:    _UserService_UpdateSubscription_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

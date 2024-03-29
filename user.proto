@@ -158,6 +158,10 @@ message InterviewResponse{
     string date=4;
     string roomId=5;
 }
+message UpdateSubscriptionRequest{
+    string userId=1;
+    string duration=2;
+}
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
     rpc UserLogin(LoginRequest)returns(UserSignupResponse);
@@ -204,4 +208,5 @@ service UserService{
     rpc GetInterviewsForUser(GetUserById)returns(stream InterviewResponse){}
     rpc ReportUser(GetUserById)returns(google.protobuf.Empty);
     rpc HireUser(AddToShortListRequest)returns(google.protobuf.Empty);
+    rpc UpdateSubscription(UpdateSubscriptionRequest)returns(google.protobuf.Empty);
 }
