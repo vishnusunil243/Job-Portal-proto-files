@@ -161,6 +161,7 @@ message InterviewResponse{
 message UpdateSubscriptionRequest{
     string userId=1;
     string duration=2;
+    bool subscription=3;
 }
 service UserService{
     rpc UserSignup(UserSignupRequest)returns(UserSignupResponse);
