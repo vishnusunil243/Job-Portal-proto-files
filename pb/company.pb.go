@@ -2143,8 +2143,8 @@ var file_company_proto_rawDesc = []byte{
 	0x70, 0x61, 0x6e, 0x79, 0x4c, 0x69, 0x6e, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x52, 0x05, 0x4c, 0x69, 0x6e, 0x6b, 0x73, 0x12, 0x25, 0x0a, 0x04, 0x6a, 0x6f, 0x62, 0x73, 0x18,
 	0x09, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x4a, 0x6f, 0x62,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x04, 0x6a, 0x6f, 0x62, 0x73, 0x32, 0xd9,
-	0x12, 0x0a, 0x0e, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x04, 0x6a, 0x6f, 0x62, 0x73, 0x32, 0x92,
+	0x13, 0x0a, 0x0e, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
 	0x65, 0x12, 0x48, 0x0a, 0x0d, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x53, 0x69, 0x67, 0x6e,
 	0x75, 0x70, 0x12, 0x1a, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e,
 	0x79, 0x53, 0x69, 0x67, 0x6e, 0x75, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b,
@@ -2293,8 +2293,12 @@ var file_company_proto_rawDesc = []byte{
 	0x70, 0x61, 0x6e, 0x79, 0x49, 0x64, 0x46, 0x72, 0x6f, 0x6d, 0x4a, 0x6f, 0x62, 0x49, 0x64, 0x12,
 	0x10, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x47, 0x65, 0x74, 0x4a, 0x6f, 0x62, 0x42, 0x79, 0x49,
 	0x64, 0x1a, 0x17, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x47, 0x65, 0x74, 0x4a, 0x6f, 0x62, 0x42,
-	0x79, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x49, 0x64, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f,
-	0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x79, 0x43, 0x6f, 0x6d, 0x70, 0x61, 0x6e, 0x79, 0x49, 0x64, 0x12, 0x37, 0x0a, 0x0b, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x48, 0x69, 0x72, 0x65, 0x64, 0x12, 0x10, 0x2e, 0x75, 0x73, 0x65, 0x72,
+	0x2e, 0x47, 0x65, 0x74, 0x4a, 0x6f, 0x62, 0x42, 0x79, 0x49, 0x64, 0x1a, 0x16, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d,
+	0x70, 0x74, 0x79, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2383,43 +2387,45 @@ var file_company_proto_depIdxs = []int32{
 	8,  // 38: user.CompanyService.BlockCompany:input_type -> user.GetJobByCompanyId
 	8,  // 39: user.CompanyService.UnblockCompany:input_type -> user.GetJobByCompanyId
 	7,  // 40: user.CompanyService.GetCompanyIdFromJobId:input_type -> user.GetJobById
-	1,  // 41: user.CompanyService.CompanySignup:output_type -> user.CompanySignupResponse
-	1,  // 42: user.CompanyService.CompanyLogin:output_type -> user.CompanySignupResponse
-	5,  // 43: user.CompanyService.AddJobs:output_type -> user.JobResponse
-	28, // 44: user.CompanyService.UpdateJobs:output_type -> google.protobuf.Empty
-	28, // 45: user.CompanyService.DeleteJob:output_type -> google.protobuf.Empty
-	5,  // 46: user.CompanyService.GetAllJobs:output_type -> user.JobResponse
-	5,  // 47: user.CompanyService.GetJob:output_type -> user.JobResponse
-	5,  // 48: user.CompanyService.GetAllJobsForCompany:output_type -> user.JobResponse
-	28, // 49: user.CompanyService.CompanyAddJobSkill:output_type -> google.protobuf.Empty
-	28, // 50: user.CompanyService.CompanyUpdateJobSkill:output_type -> google.protobuf.Empty
-	10, // 51: user.CompanyService.GetAllJobSkill:output_type -> user.JobSkillResponse
-	28, // 52: user.CompanyService.DeleteJobSkill:output_type -> google.protobuf.Empty
-	28, // 53: user.CompanyService.CompanyAddLink:output_type -> google.protobuf.Empty
-	28, // 54: user.CompanyService.CompanyDeleteLink:output_type -> google.protobuf.Empty
-	14, // 55: user.CompanyService.CompanyGetAllLink:output_type -> user.CompanyLinkResponse
-	28, // 56: user.CompanyService.CompanyCreateProfile:output_type -> google.protobuf.Empty
-	1,  // 57: user.CompanyService.GetCompanyById:output_type -> user.CompanySignupResponse
-	28, // 58: user.CompanyService.CompanyAddAddress:output_type -> google.protobuf.Empty
-	28, // 59: user.CompanyService.CompanyEditAddress:output_type -> google.protobuf.Empty
-	16, // 60: user.CompanyService.CompanyGetAddress:output_type -> user.CompanyAddressResponse
-	28, // 61: user.CompanyService.CompanyEditName:output_type -> google.protobuf.Empty
-	28, // 62: user.CompanyService.CompanyEditPhone:output_type -> google.protobuf.Empty
-	20, // 63: user.CompanyService.CompanyUploadProfileImage:output_type -> user.CompanyImageResponse
-	20, // 64: user.CompanyService.GetProfilePic:output_type -> user.CompanyImageResponse
-	5,  // 65: user.CompanyService.JobSearch:output_type -> user.JobResponse
-	5,  // 66: user.CompanyService.GetHome:output_type -> user.JobResponse
-	28, // 67: user.CompanyService.NotifyMe:output_type -> google.protobuf.Empty
-	23, // 68: user.CompanyService.GetAllNotifyMe:output_type -> user.NotifyMeResponse
-	28, // 69: user.CompanyService.CancelNotify:output_type -> google.protobuf.Empty
-	28, // 70: user.CompanyService.UpdateAverageRatingOfCompany:output_type -> google.protobuf.Empty
-	26, // 71: user.CompanyService.GetAllCompany:output_type -> user.CompanyResponse
-	27, // 72: user.CompanyService.GetCompany:output_type -> user.GetCompanyResponse
-	28, // 73: user.CompanyService.BlockCompany:output_type -> google.protobuf.Empty
-	28, // 74: user.CompanyService.UnblockCompany:output_type -> google.protobuf.Empty
-	8,  // 75: user.CompanyService.GetCompanyIdFromJobId:output_type -> user.GetJobByCompanyId
-	41, // [41:76] is the sub-list for method output_type
-	6,  // [6:41] is the sub-list for method input_type
+	7,  // 41: user.CompanyService.UpdateHired:input_type -> user.GetJobById
+	1,  // 42: user.CompanyService.CompanySignup:output_type -> user.CompanySignupResponse
+	1,  // 43: user.CompanyService.CompanyLogin:output_type -> user.CompanySignupResponse
+	5,  // 44: user.CompanyService.AddJobs:output_type -> user.JobResponse
+	28, // 45: user.CompanyService.UpdateJobs:output_type -> google.protobuf.Empty
+	28, // 46: user.CompanyService.DeleteJob:output_type -> google.protobuf.Empty
+	5,  // 47: user.CompanyService.GetAllJobs:output_type -> user.JobResponse
+	5,  // 48: user.CompanyService.GetJob:output_type -> user.JobResponse
+	5,  // 49: user.CompanyService.GetAllJobsForCompany:output_type -> user.JobResponse
+	28, // 50: user.CompanyService.CompanyAddJobSkill:output_type -> google.protobuf.Empty
+	28, // 51: user.CompanyService.CompanyUpdateJobSkill:output_type -> google.protobuf.Empty
+	10, // 52: user.CompanyService.GetAllJobSkill:output_type -> user.JobSkillResponse
+	28, // 53: user.CompanyService.DeleteJobSkill:output_type -> google.protobuf.Empty
+	28, // 54: user.CompanyService.CompanyAddLink:output_type -> google.protobuf.Empty
+	28, // 55: user.CompanyService.CompanyDeleteLink:output_type -> google.protobuf.Empty
+	14, // 56: user.CompanyService.CompanyGetAllLink:output_type -> user.CompanyLinkResponse
+	28, // 57: user.CompanyService.CompanyCreateProfile:output_type -> google.protobuf.Empty
+	1,  // 58: user.CompanyService.GetCompanyById:output_type -> user.CompanySignupResponse
+	28, // 59: user.CompanyService.CompanyAddAddress:output_type -> google.protobuf.Empty
+	28, // 60: user.CompanyService.CompanyEditAddress:output_type -> google.protobuf.Empty
+	16, // 61: user.CompanyService.CompanyGetAddress:output_type -> user.CompanyAddressResponse
+	28, // 62: user.CompanyService.CompanyEditName:output_type -> google.protobuf.Empty
+	28, // 63: user.CompanyService.CompanyEditPhone:output_type -> google.protobuf.Empty
+	20, // 64: user.CompanyService.CompanyUploadProfileImage:output_type -> user.CompanyImageResponse
+	20, // 65: user.CompanyService.GetProfilePic:output_type -> user.CompanyImageResponse
+	5,  // 66: user.CompanyService.JobSearch:output_type -> user.JobResponse
+	5,  // 67: user.CompanyService.GetHome:output_type -> user.JobResponse
+	28, // 68: user.CompanyService.NotifyMe:output_type -> google.protobuf.Empty
+	23, // 69: user.CompanyService.GetAllNotifyMe:output_type -> user.NotifyMeResponse
+	28, // 70: user.CompanyService.CancelNotify:output_type -> google.protobuf.Empty
+	28, // 71: user.CompanyService.UpdateAverageRatingOfCompany:output_type -> google.protobuf.Empty
+	26, // 72: user.CompanyService.GetAllCompany:output_type -> user.CompanyResponse
+	27, // 73: user.CompanyService.GetCompany:output_type -> user.GetCompanyResponse
+	28, // 74: user.CompanyService.BlockCompany:output_type -> google.protobuf.Empty
+	28, // 75: user.CompanyService.UnblockCompany:output_type -> google.protobuf.Empty
+	8,  // 76: user.CompanyService.GetCompanyIdFromJobId:output_type -> user.GetJobByCompanyId
+	28, // 77: user.CompanyService.UpdateHired:output_type -> google.protobuf.Empty
+	42, // [42:78] is the sub-list for method output_type
+	6,  // [6:42] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name

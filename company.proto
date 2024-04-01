@@ -209,4 +209,5 @@ service CompanyService {
     rpc BlockCompany(GetJobByCompanyId)returns(google.protobuf.Empty);
     rpc UnblockCompany(GetJobByCompanyId)returns(google.protobuf.Empty);
     rpc GetCompanyIdFromJobId(GetJobById)returns(GetJobByCompanyId);
+    rpc UpdateHired(GetJobById)returns(google.protobuf.Empty);
 }

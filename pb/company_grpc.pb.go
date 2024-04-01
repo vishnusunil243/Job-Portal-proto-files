@@ -58,6 +58,7 @@ type CompanyServiceClient interface {
 	BlockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnblockCompany(ctx context.Context, in *GetJobByCompanyId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetCompanyIdFromJobId(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*GetJobByCompanyId, error)
+	UpdateHired(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type companyServiceClient struct {
@@ -567,6 +568,15 @@ func (c *companyServiceClient) GetCompanyIdFromJobId(ctx context.Context, in *Ge
 	return out, nil
 }
 
+func (c *companyServiceClient) UpdateHired(ctx context.Context, in *GetJobById, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.CompanyService/UpdateHired", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CompanyServiceServer is the server API for CompanyService service.
 // All implementations must embed UnimplementedCompanyServiceServer
 // for forward compatibility
@@ -606,6 +616,7 @@ type CompanyServiceServer interface {
 	BlockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
 	UnblockCompany(context.Context, *GetJobByCompanyId) (*emptypb.Empty, error)
 	GetCompanyIdFromJobId(context.Context, *GetJobById) (*GetJobByCompanyId, error)
+	UpdateHired(context.Context, *GetJobById) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCompanyServiceServer()
 }
 
@@ -717,6 +728,9 @@ func (UnimplementedCompanyServiceServer) UnblockCompany(context.Context, *GetJob
 }
 func (UnimplementedCompanyServiceServer) GetCompanyIdFromJobId(context.Context, *GetJobById) (*GetJobByCompanyId, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompanyIdFromJobId not implemented")
+}
+func (UnimplementedCompanyServiceServer) UpdateHired(context.Context, *GetJobById) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateHired not implemented")
 }
 func (UnimplementedCompanyServiceServer) mustEmbedUnimplementedCompanyServiceServer() {}
 
@@ -1385,6 +1399,24 @@ func _CompanyService_GetCompanyIdFromJobId_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompanyService_UpdateHired_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompanyServiceServer).UpdateHired(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.CompanyService/UpdateHired",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompanyServiceServer).UpdateHired(ctx, req.(*GetJobById))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CompanyService_ServiceDesc is the grpc.ServiceDesc for CompanyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1499,6 +1531,10 @@ var CompanyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCompanyIdFromJobId",
 			Handler:    _CompanyService_GetCompanyIdFromJobId_Handler,
+		},
+		{
+			MethodName: "UpdateHired",
+			Handler:    _CompanyService_UpdateHired_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
