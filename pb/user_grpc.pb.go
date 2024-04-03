@@ -68,6 +68,10 @@ type UserServiceClient interface {
 	ReportUser(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	HireUser(ctx context.Context, in *AddToShortListRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateSubscription(ctx context.Context, in *UpdateSubscriptionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddProject(ctx context.Context, in *AddProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	EditProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAllProjects(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllProjectsClient, error)
 }
 
 type userServiceClient struct {
@@ -690,6 +694,65 @@ func (c *userServiceClient) UpdateSubscription(ctx context.Context, in *UpdateSu
 	return out, nil
 }
 
+func (c *userServiceClient) AddProject(ctx context.Context, in *AddProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/DeleteProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) EditProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/EditProject", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetAllProjects(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllProjectsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[9], "/user.UserService/GetAllProjects", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllProjectsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllProjectsClient interface {
+	Recv() (*ProjectResponse, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllProjectsClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllProjectsClient) Recv() (*ProjectResponse, error) {
+	m := new(ProjectResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -739,6 +802,10 @@ type UserServiceServer interface {
 	ReportUser(context.Context, *GetUserById) (*emptypb.Empty, error)
 	HireUser(context.Context, *AddToShortListRequest) (*emptypb.Empty, error)
 	UpdateSubscription(context.Context, *UpdateSubscriptionRequest) (*emptypb.Empty, error)
+	AddProject(context.Context, *AddProjectRequest) (*emptypb.Empty, error)
+	DeleteProject(context.Context, *DeleteProjectRequest) (*emptypb.Empty, error)
+	EditProject(context.Context, *UpdateProjectRequest) (*emptypb.Empty, error)
+	GetAllProjects(*GetUserById, UserService_GetAllProjectsServer) error
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -880,6 +947,18 @@ func (UnimplementedUserServiceServer) HireUser(context.Context, *AddToShortListR
 }
 func (UnimplementedUserServiceServer) UpdateSubscription(context.Context, *UpdateSubscriptionRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSubscription not implemented")
+}
+func (UnimplementedUserServiceServer) AddProject(context.Context, *AddProjectRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddProject not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteProject(context.Context, *DeleteProjectRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProject not implemented")
+}
+func (UnimplementedUserServiceServer) EditProject(context.Context, *UpdateProjectRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditProject not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllProjects(*GetUserById, UserService_GetAllProjectsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1731,6 +1810,81 @@ func _UserService_UpdateSubscription_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AddProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddProject(ctx, req.(*AddProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/DeleteProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteProject(ctx, req.(*DeleteProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_EditProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).EditProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/EditProject",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).EditProject(ctx, req.(*UpdateProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllProjects_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetUserById)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAllProjects(m, &userServiceGetAllProjectsServer{stream})
+}
+
+type UserService_GetAllProjectsServer interface {
+	Send(*ProjectResponse) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllProjectsServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllProjectsServer) Send(m *ProjectResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1882,6 +2036,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateSubscription",
 			Handler:    _UserService_UpdateSubscription_Handler,
 		},
+		{
+			MethodName: "AddProject",
+			Handler:    _UserService_AddProject_Handler,
+		},
+		{
+			MethodName: "DeleteProject",
+			Handler:    _UserService_DeleteProject_Handler,
+		},
+		{
+			MethodName: "EditProject",
+			Handler:    _UserService_EditProject_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -1927,6 +2093,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "GetInterviewsForUser",
 			Handler:       _UserService_GetInterviewsForUser_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllProjects",
+			Handler:       _UserService_GetAllProjects_Handler,
 			ServerStreams: true,
 		},
 	},
