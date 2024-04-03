@@ -168,6 +168,7 @@ message AddProjectRequest{
     string name=2;
     string description=3;
     string link=4;
+    bytes imageData=5;
 }
 message DeleteProjectRequest{
     string projectId=1;
@@ -177,6 +178,7 @@ message UpdateProjectRequest{
     string name=2;
     string description=3;
     string link=4;
+    bytes imageData=5;
 }
 message ProjectResponse{
     string Id=1;
