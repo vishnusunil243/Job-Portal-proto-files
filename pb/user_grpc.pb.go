@@ -72,6 +72,7 @@ type UserServiceClient interface {
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAllProjects(ctx context.Context, in *GetUserById, opts ...grpc.CallOption) (UserService_GetAllProjectsClient, error)
+	AddProjectImage(ctx context.Context, in *AddProjectImageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -753,6 +754,15 @@ func (x *userServiceGetAllProjectsClient) Recv() (*ProjectResponse, error) {
 	return m, nil
 }
 
+func (c *userServiceClient) AddProjectImage(ctx context.Context, in *AddProjectImageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.UserService/AddProjectImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -806,6 +816,7 @@ type UserServiceServer interface {
 	DeleteProject(context.Context, *DeleteProjectRequest) (*emptypb.Empty, error)
 	EditProject(context.Context, *UpdateProjectRequest) (*emptypb.Empty, error)
 	GetAllProjects(*GetUserById, UserService_GetAllProjectsServer) error
+	AddProjectImage(context.Context, *AddProjectImageRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -959,6 +970,9 @@ func (UnimplementedUserServiceServer) EditProject(context.Context, *UpdateProjec
 }
 func (UnimplementedUserServiceServer) GetAllProjects(*GetUserById, UserService_GetAllProjectsServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllProjects not implemented")
+}
+func (UnimplementedUserServiceServer) AddProjectImage(context.Context, *AddProjectImageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddProjectImage not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -1885,6 +1899,24 @@ func (x *userServiceGetAllProjectsServer) Send(m *ProjectResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _UserService_AddProjectImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddProjectImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddProjectImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/AddProjectImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddProjectImage(ctx, req.(*AddProjectImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2047,6 +2079,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditProject",
 			Handler:    _UserService_EditProject_Handler,
+		},
+		{
+			MethodName: "AddProjectImage",
+			Handler:    _UserService_AddProjectImage_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
