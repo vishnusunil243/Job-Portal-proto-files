@@ -138,7 +138,7 @@ message JobSearchRequest{
     string userId=1;
     string designation=2;
     string companyName=3;
-    string category=4;
+    int32 categoryId=4;
 }
 message NotifyMeRequest{
     string userId=1;
